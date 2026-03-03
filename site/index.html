@@ -781,36 +781,114 @@
       position: fixed;
       bottom: 24px;
       right: 24px;
-      max-width: 360px;
+      max-width: 420px;
       background: #fff;
       border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 24px;
-      box-shadow: 0 8px 40px rgba(0,0,0,0.12);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.14);
       z-index: 9999;
       font-size: 0.88rem;
       color: var(--text2);
       line-height: 1.6;
       display: none;
     }
-    .cookie-banner p { margin-bottom: 16px; }
+    .cookie-banner h3 { font-size: 1rem; font-weight: 800; color: var(--text); margin-bottom: 10px; }
+    .cookie-banner p { margin-bottom: 16px; font-size: 0.85rem; }
     .cookie-banner a { color: var(--orange); text-decoration: underline; }
-    .cookie-ok {
+    .cookie-btns { display: flex; gap: 10px; margin-bottom: 0; }
+    .cookie-btn {
+      flex: 1;
+      padding: 11px 16px;
+      border-radius: var(--radius-md);
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1.5px solid;
+      text-align: center;
+    }
+    .cookie-btn.primary { background: var(--orange); border-color: var(--orange); color: #fff; }
+    .cookie-btn.primary:hover { background: var(--orange-dark); border-color: var(--orange-dark); }
+    .cookie-btn.secondary { background: transparent; border-color: var(--border); color: var(--text); }
+    .cookie-btn.secondary:hover { border-color: var(--orange); color: var(--orange); }
+    .cookie-manage-link {
+      display: block;
+      text-align: center;
+      margin-top: 14px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text3);
+      cursor: pointer;
+      transition: color 0.2s;
+      background: none;
+      border: none;
+      width: 100%;
+    }
+    .cookie-manage-link:hover { color: var(--orange); }
+
+    /* Cookie preferences panel */
+    .cookie-prefs { display: none; margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--border); }
+    .cookie-prefs.open { display: block; }
+    .cookie-cat {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .cookie-cat:last-child { border-bottom: none; }
+    .cookie-cat-info { flex: 1; }
+    .cookie-cat-name { font-size: 0.85rem; font-weight: 700; color: var(--text); }
+    .cookie-cat-desc { font-size: 0.75rem; color: var(--text3); margin-top: 2px; }
+    .toggle-switch {
+      position: relative;
+      width: 44px;
+      height: 24px;
+      flex-shrink: 0;
+      margin-left: 16px;
+    }
+    .toggle-switch input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider {
+      position: absolute;
+      inset: 0;
+      background: #ddd;
+      border-radius: 24px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .toggle-slider::before {
+      content: '';
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      left: 3px;
+      top: 3px;
+      background: #fff;
+      border-radius: 50%;
+      transition: transform 0.2s;
+    }
+    .toggle-switch input:checked + .toggle-slider { background: var(--orange); }
+    .toggle-switch input:checked + .toggle-slider::before { transform: translateX(20px); }
+    .toggle-switch input:disabled + .toggle-slider { opacity: 0.6; cursor: not-allowed; }
+    .cookie-save {
       display: block;
       width: 100%;
-      padding: 12px 20px;
-      background: var(--orange);
+      margin-top: 14px;
+      padding: 10px;
+      background: var(--text);
       color: #fff;
       border: none;
-      border-radius: var(--radius);
-      font-size: 0.9rem;
+      border-radius: var(--radius-md);
+      font-size: 0.82rem;
       font-weight: 700;
       cursor: pointer;
       transition: background 0.2s;
     }
-    .cookie-ok:hover { background: var(--orange-dark); }
+    .cookie-save:hover { background: #333; }
     @media (max-width: 600px) {
       .cookie-banner { left: 12px; right: 12px; bottom: 12px; max-width: none; padding: 20px; }
+      .cookie-btns { flex-direction: column; gap: 8px; }
     }
 
     /* ═══ LOGIN MODAL ═══ */
@@ -1346,6 +1424,8 @@
             <a href="https://twitter.com" target="_blank">Twitter / X</a>
             <a href="https://t.me" target="_blank">Telegram</a>
             <a href="https://discord.com" target="_blank">Discord</a>
+            <a href="privacy.html">Privacy Policy</a>
+            <a href="#" onclick="openCookieSettings(); return false;">Cookie Settings</a>
           </div>
         </div>
       </div>
@@ -1355,8 +1435,46 @@
 
   <!-- COOKIE BANNER -->
   <div class="cookie-banner" id="cookieBanner">
-    <p>We use cookies to ensure you get the best experience on our website. Please read our <a href="#">privacy policy</a> to find out more.</p>
-    <button class="cookie-ok" onclick="acceptCookies()">OK</button>
+    <h3>Cookie Preferences</h3>
+    <p>We use cookies and local storage to improve your experience. Read our <a href="privacy.html">Privacy Policy</a> for details.</p>
+    <div class="cookie-btns">
+      <button class="cookie-btn primary" onclick="acceptAllCookies()">Accept All</button>
+      <button class="cookie-btn secondary" onclick="acceptEssentialCookies()">Essential Only</button>
+    </div>
+    <button class="cookie-manage-link" onclick="toggleCookiePrefs()">Manage Preferences</button>
+    <div class="cookie-prefs" id="cookiePrefs">
+      <div class="cookie-cat">
+        <div class="cookie-cat-info">
+          <div class="cookie-cat-name">Essential</div>
+          <div class="cookie-cat-desc">Cookie consent memory. Always required.</div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" checked disabled />
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+      <div class="cookie-cat">
+        <div class="cookie-cat-info">
+          <div class="cookie-cat-name">Functional</div>
+          <div class="cookie-cat-desc">Social login persistence (X, Telegram accounts).</div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="cookieFunctional" checked />
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+      <div class="cookie-cat">
+        <div class="cookie-cat-info">
+          <div class="cookie-cat-name">Analytics</div>
+          <div class="cookie-cat-desc">Usage data to improve the site. Currently unused.</div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="cookieAnalytics" />
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+      <button class="cookie-save" onclick="saveCustomCookies()">Save Preferences</button>
+    </div>
   </div>
 
   <!-- LOGIN MODAL -->
@@ -1390,7 +1508,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        By connecting, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+        By connecting, you agree to our <a href="privacy.html">Terms of Service</a> and <a href="privacy.html">Privacy Policy</a>.
       </div>
     </div>
   </div>
@@ -1507,15 +1625,68 @@
       setTimeout(() => b.textContent = 'COPY', 2000);
     }
 
-    /* ═══ COOKIE BANNER ═══ */
+    /* ═══ COOKIE CONSENT SYSTEM ═══ */
     (function(){
-      if (!localStorage.getItem('warbird_cookies')) {
+      const prefs = getCookiePrefs();
+      if (!prefs) {
         setTimeout(() => { document.getElementById('cookieBanner').style.display = 'block'; }, 2000);
+      } else {
+        applyCookiePrefs(prefs);
       }
     })();
-    function acceptCookies() {
+
+    function getCookiePrefs() {
+      try { return JSON.parse(localStorage.getItem('warbird_cookie_prefs')); }
+      catch { return null; }
+    }
+
+    function setCookiePrefs(prefs) {
       localStorage.setItem('warbird_cookies', '1');
+      localStorage.setItem('warbird_cookie_prefs', JSON.stringify(prefs));
+      applyCookiePrefs(prefs);
       document.getElementById('cookieBanner').style.display = 'none';
+    }
+
+    function applyCookiePrefs(prefs) {
+      if (!prefs) return;
+      // If functional cookies disabled, clear social login data
+      if (!prefs.functional) {
+        localStorage.removeItem('warbird_user');
+        updateUI();
+      }
+    }
+
+    function acceptAllCookies() {
+      setCookiePrefs({ essential: true, functional: true, analytics: true });
+      showToast('All cookies accepted');
+    }
+
+    function acceptEssentialCookies() {
+      setCookiePrefs({ essential: true, functional: false, analytics: false });
+      showToast('Using essential cookies only');
+    }
+
+    function toggleCookiePrefs() {
+      document.getElementById('cookiePrefs').classList.toggle('open');
+    }
+
+    function saveCustomCookies() {
+      const functional = document.getElementById('cookieFunctional').checked;
+      const analytics = document.getElementById('cookieAnalytics').checked;
+      setCookiePrefs({ essential: true, functional, analytics });
+      showToast('Cookie preferences saved');
+    }
+
+    function openCookieSettings() {
+      const banner = document.getElementById('cookieBanner');
+      banner.style.display = 'block';
+      // Restore current prefs into toggles
+      const prefs = getCookiePrefs();
+      if (prefs) {
+        document.getElementById('cookieFunctional').checked = prefs.functional;
+        document.getElementById('cookieAnalytics').checked = prefs.analytics;
+      }
+      document.getElementById('cookiePrefs').classList.add('open');
     }
 
     /* ═══ AUTH SYSTEM — X + TELEGRAM ═══ */
@@ -1558,6 +1729,11 @@
     });
 
     function loginWithX() {
+      // Check functional cookies
+      const prefs = getCookiePrefs();
+      if (prefs && !prefs.functional) {
+        if (!confirm('Functional cookies are disabled. Your login won\'t persist after you close the browser. Continue?')) return;
+      }
       // Simulate X (Twitter) OAuth — prompt for handle
       const handle = prompt('Enter your X (Twitter) username (e.g. @warbird):');
       if (!handle || !handle.trim()) return;
@@ -1577,6 +1753,11 @@
     }
 
     function loginWithTelegram() {
+      // Check functional cookies
+      const prefs = getCookiePrefs();
+      if (prefs && !prefs.functional) {
+        if (!confirm('Functional cookies are disabled. Your login won\'t persist after you close the browser. Continue?')) return;
+      }
       // Simulate Telegram auth — prompt for handle
       const handle = prompt('Enter your Telegram username (e.g. @warbird):');
       if (!handle || !handle.trim()) return;

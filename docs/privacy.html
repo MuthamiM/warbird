@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy Policy — WARBIRD</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --orange: #f7931a;
+      --orange-dark: #e8850f;
+      --orange-bg: #fff8f0;
+      --bg: #ffffff;
+      --bg-alt: #f9f9f9;
+      --bg-dark: #1d1d1d;
+      --text: #1d1d1d;
+      --text2: #4a4a4a;
+      --text3: #888888;
+      --border: #e8e8e8;
+      --radius: 4px;
+      --radius-md: 8px;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--orange); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    ::selection { background: var(--orange); color: #fff; }
+    .container { max-width: 800px; margin: 0 auto; padding: 0 24px; }
+
+    /* NAV */
+    .navbar {
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 70px;
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .nav-logo {
+      width: 36px;
+      height: 36px;
+      background: var(--orange);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .nav-logo svg { width: 20px; height: 20px; fill: #fff; }
+    .back-link {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text2);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--orange); text-decoration: none; }
+    .back-link svg { width: 16px; height: 16px; fill: currentColor; }
+
+    /* CONTENT */
+    .page-header {
+      padding: 64px 0 32px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 48px;
+    }
+    .page-header h1 {
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+    .page-header h1 span { color: var(--orange); }
+    .page-header .meta {
+      font-size: 0.85rem;
+      color: var(--text3);
+      font-weight: 500;
+    }
+    .content { padding-bottom: 80px; }
+    .content h2 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin: 48px 0 16px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      color: var(--text);
+    }
+    .content h2:first-child { border-top: none; margin-top: 0; padding-top: 0; }
+    .content h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin: 28px 0 12px;
+      color: var(--text);
+    }
+    .content p {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.85;
+      margin-bottom: 16px;
+    }
+    .content ul {
+      margin: 12px 0 20px 20px;
+      list-style: disc;
+    }
+    .content li {
+      font-size: 0.92rem;
+      color: var(--text2);
+      line-height: 1.8;
+      margin-bottom: 6px;
+    }
+    .content .highlight {
+      background: var(--orange-bg);
+      border-left: 4px solid var(--orange);
+      padding: 20px 24px;
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      margin: 24px 0;
+    }
+    .content .highlight p { margin-bottom: 0; }
+    .cookie-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 0.88rem;
+    }
+    .cookie-table th, .cookie-table td {
+      padding: 14px 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .cookie-table th {
+      background: var(--bg-alt);
+      font-weight: 700;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text3);
+    }
+    .cookie-table td { color: var(--text2); }
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 3px;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+    .badge.required { background: var(--orange-bg); color: var(--orange); }
+    .badge.optional { background: #f0f0f0; color: var(--text3); }
+
+    /* FOOTER */
+    .footer {
+      background: var(--bg-dark);
+      color: #fff;
+      padding: 32px 0;
+      text-align: center;
+      font-size: 0.78rem;
+      color: #666;
+    }
+
+    @media (max-width: 600px) {
+      .page-header { padding: 40px 0 24px; margin-bottom: 32px; }
+      .content h2 { font-size: 1.15rem; margin-top: 36px; }
+      .cookie-table { font-size: 0.78rem; }
+      .cookie-table th, .cookie-table td { padding: 10px 10px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-brand">
+        <div class="nav-logo"><svg viewBox="0 0 24 24"><path d="M12 2L2 12l3 3 7-7 7 7 3-3L12 2zm0 8l-5 5h3v5h4v-5h3l-5-5z"/></svg></div>
+        warbird
+      </a>
+      <a href="index.html" class="back-link">
+        <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+        Back to Home
+      </a>
+    </div>
+  </nav>
+
+  <!-- PAGE HEADER -->
+  <div class="container">
+    <div class="page-header">
+      <h1>Privacy <span>Policy</span></h1>
+      <div class="meta">Last updated: March 3, 2026</div>
+    </div>
+
+    <div class="content">
+
+      <h2>1. Introduction</h2>
+      <p>WARBIRD ("we", "us", "our") respects your privacy and is committed to protecting any personal data you share while using our website at <strong>muthamim.github.io/warbird</strong> (the "Site"). This Privacy Policy explains what data we collect, how we use it, and your rights regarding that data.</p>
+      <p>By using our Site, you agree to the collection and use of information in accordance with this policy.</p>
+
+      <h2>2. Data We Collect</h2>
+      <h3>2.1 Information You Provide</h3>
+      <p>When you use the social login feature (X/Twitter or Telegram), we store:</p>
+      <ul>
+        <li><strong>Username/handle</strong> — The username you enter during the login prompt</li>
+        <li><strong>Connection timestamp</strong> — The date and time you connected your account</li>
+      </ul>
+      <div class="highlight">
+        <p><strong>Important:</strong> This data is stored <strong>only in your browser's local storage</strong> (localStorage). We do not transmit, collect, or store this data on any server. It never leaves your device.</p>
+      </div>
+
+      <h3>2.2 Cookies &amp; Local Storage</h3>
+      <p>We use cookies and local storage to improve your experience:</p>
+
+      <table class="cookie-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Purpose</th>
+            <th>Duration</th>
+            <th>Required</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>warbird_cookies</code></td>
+            <td>localStorage</td>
+            <td>Remembers your cookie consent preference so the banner doesn't reappear</td>
+            <td>Persistent</td>
+            <td><span class="badge required">Essential</span></td>
+          </tr>
+          <tr>
+            <td><code>warbird_user</code></td>
+            <td>localStorage</td>
+            <td>Stores your connected social account info (username, avatar, connection date)</td>
+            <td>Until logout</td>
+            <td><span class="badge optional">Functional</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>2.3 Automatically Collected Data</h3>
+      <p>Our site is hosted on GitHub Pages. GitHub may collect basic technical data such as:</p>
+      <ul>
+        <li>IP address</li>
+        <li>Browser type and version</li>
+        <li>Pages visited and time of visit</li>
+      </ul>
+      <p>This data is collected by GitHub per their own <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" target="_blank">Privacy Statement</a>. We do not have access to this data.</p>
+
+      <h2>3. How We Use Your Data</h2>
+      <p>The data stored locally on your device is used to:</p>
+      <ul>
+        <li>Remember your cookie consent choice</li>
+        <li>Keep you logged in with your connected social accounts</li>
+        <li>Display your username and avatar in the navigation bar</li>
+      </ul>
+      <p>We do <strong>not</strong>:</p>
+      <ul>
+        <li>Send your data to any external server</li>
+        <li>Share your data with third parties</li>
+        <li>Use your data for advertising or tracking</li>
+        <li>Perform analytics or profiling</li>
+      </ul>
+
+      <h2>4. Third-Party Services</h2>
+      <p>Our Site includes links and embeds to third-party services. When you interact with these services, their own privacy policies apply:</p>
+      <ul>
+        <li><strong>Jupiter Terminal</strong> (<a href="https://jup.ag" target="_blank">jup.ag</a>) — DEX aggregator swap widget</li>
+        <li><strong>DexScreener</strong> (<a href="https://dexscreener.com" target="_blank">dexscreener.com</a>) — Chart embed for live price data</li>
+        <li><strong>Google Fonts</strong> (<a href="https://fonts.google.com" target="_blank">fonts.google.com</a>) — Font delivery (Inter typeface)</li>
+        <li><strong>GitHub Pages</strong> — Hosting platform</li>
+      </ul>
+      <p>We recommend reviewing their respective privacy policies before interacting with these services.</p>
+
+      <h2>5. Cookie Preferences</h2>
+      <p>When you first visit our Site, a cookie consent banner lets you choose:</p>
+      <ul>
+        <li><strong>Accept All</strong> — Enables all cookies including functional ones (social login persistence)</li>
+        <li><strong>Essential Only</strong> — Only the cookie consent preference is saved; social login data will not persist between sessions</li>
+        <li><strong>Manage Preferences</strong> — Lets you toggle individual cookie categories on or off</li>
+      </ul>
+      <p>You can change your preferences at any time by clicking "Cookie Settings" in the footer, or by clearing your browser's local storage.</p>
+
+      <h2>6. Your Rights</h2>
+      <p>Since all data is stored locally in your browser, you have full control:</p>
+      <ul>
+        <li><strong>Access</strong> — Open your browser's Developer Tools (F12 → Application → Local Storage) to view all stored data</li>
+        <li><strong>Delete</strong> — Clear your browser data or click "Logout" to remove your account data, or use "Cookie Settings" in the footer</li>
+        <li><strong>Portability</strong> — Copy the localStorage entries from Developer Tools</li>
+        <li><strong>Object</strong> — Choose "Essential Only" in the cookie banner to prevent non-essential storage</li>
+      </ul>
+
+      <h2>7. Data Security</h2>
+      <p>Your data is stored only in your browser's local storage and is not transmitted over the network. The Site is served over HTTPS, ensuring that all page loads are encrypted in transit.</p>
+
+      <h2>8. Children's Privacy</h2>
+      <p>Our Site is not directed at individuals under the age of 13. We do not knowingly collect personal data from children. If you believe a child has provided data through local storage, simply clear the browser data to remove it.</p>
+
+      <h2>9. Changes to This Policy</h2>
+      <p>We may update this Privacy Policy from time to time. Any changes will be posted on this page with an updated "Last updated" date. We encourage you to review this page periodically.</p>
+
+      <h2>10. Contact</h2>
+      <p>If you have questions about this Privacy Policy, you can reach us through our community channels:</p>
+      <ul>
+        <li>Twitter / X: <a href="https://twitter.com" target="_blank">@warbird</a></li>
+        <li>Telegram: <a href="https://t.me" target="_blank">WARBIRD Community</a></li>
+      </ul>
+
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      WARBIRD is a meme coin with no intrinsic value or expectation of financial return. &copy; 2026 WARBIRD. All rights reserved.
+    </div>
+  </footer>
+
+</body>
+</html>
