@@ -1090,25 +1090,32 @@
     .connected-accs { margin-top: 20px; display: flex; flex-direction: column; gap: 10px; }
     .acc-row {
       display: flex;
+      flex-wrap: wrap;
       align-items: center;
-      gap: 12px;
-      padding: 12px 16px;
+      gap: 8px 10px;
+      padding: 12px 14px;
       border: 1px solid var(--border);
       border-radius: var(--radius-md);
       font-size: 0.85rem;
     }
     .acc-row svg { width: 18px; height: 18px; flex-shrink: 0; }
-    .acc-row .acc-name { flex: 1; font-weight: 600; }
-    .acc-row .acc-status { font-size: 0.72rem; font-weight: 700; color: var(--green); letter-spacing: 0.5px; }
+    .acc-row img { flex-shrink: 0; }
+    .acc-row .acc-name { font-weight: 600; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 120px; }
+    .acc-row .acc-badges { display: flex; align-items: center; gap: 6px; margin-left: auto; flex-shrink: 0; }
+    .acc-row .acc-badge-verified { font-size: 0.65rem; font-weight: 700; color: #059669; background: #d1fae5; padding: 2px 6px; border-radius: 4px; letter-spacing: 0.3px; }
+    .acc-row .acc-badge-connected { font-size: 0.65rem; font-weight: 700; color: var(--green); background: rgba(247,147,26,0.1); padding: 2px 6px; border-radius: 4px; letter-spacing: 0.3px; }
     .acc-row .acc-disconnect {
-      font-size: 0.72rem;
-      font-weight: 700;
+      font-size: 0.7rem;
+      font-weight: 600;
       color: var(--red);
       background: none;
-      border: none;
+      border: 1px solid var(--red);
+      border-radius: 4px;
+      padding: 2px 8px;
       cursor: pointer;
+      transition: all 0.15s;
     }
-    .acc-row .acc-disconnect:hover { text-decoration: underline; }
+    .acc-row .acc-disconnect:hover { background: var(--red); color: #fff; }
 
     /* ═══ TRUST BADGES ═══ */
     .trust-row { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-bottom: 48px; }
@@ -1917,11 +1924,8 @@
 
     function applyCookiePrefs(prefs) {
       if (!prefs) return;
-      // If functional cookies disabled, clear social login data
-      if (!prefs.functional) {
-        localStorage.removeItem('warbird_user');
-        updateUI();
-      }
+      // Auth data is treated as essential — never wiped by cookie prefs.
+      // Functional cookies control non-essential features only.
     }
 
     function acceptAllCookies() {
@@ -2094,6 +2098,8 @@
       // See: https://core.telegram.org/widgets/login
       const container = document.getElementById('telegramWidgetContainer');
       container.innerHTML = '';
+
+      // Try the official widget first
       const script = document.createElement('script');
       script.async = true;
       script.src = 'https://telegram.org/js/telegram-widget.js?22';
@@ -2104,6 +2110,21 @@
       script.setAttribute('data-radius', '8');
       container.appendChild(script);
       _tgWidgetLoaded = true;
+
+      // Fallback: if widget fails to load after 4 seconds, show a direct link button
+      setTimeout(() => {
+        const iframe = container.querySelector('iframe');
+        if (!iframe || iframe.offsetHeight < 10) {
+          container.innerHTML = `
+            <a href="https://oauth.telegram.org/auth?bot_id=${botUsername}&origin=${encodeURIComponent(window.location.origin)}&request_access=write"
+               target="_blank" rel="noopener"
+               style="display:inline-flex;align-items:center;gap:8px;padding:12px 24px;background:#0088cc;color:#fff;border-radius:8px;font-weight:700;font-size:0.9rem;text-decoration:none;">
+              <svg viewBox="0 0 24 24" style="width:20px;height:20px;fill:#fff"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.479.33-.913.492-1.302.48-.428-.012-1.252-.242-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+              Open Telegram to Authorize
+            </a>
+            <p style="font-size:0.75rem;color:#888;margin-top:10px;">Widget couldn't load. Click above to authorize directly via Telegram.</p>`;
+        }
+      }, 4000);
     }
 
     // Global callback for Telegram Login Widget
@@ -2216,26 +2237,30 @@
       let html = '';
       if (user.accounts.x) {
         const dn = escapeHtml(user.accounts.x.displayName);
-        const badge = user.accounts.x.verified ? '<span style="color:#059669;font-size:0.7rem;font-weight:700;"> VERIFIED</span>' : '';
-        const avatar = user.accounts.x.avatar ? `<img src="${escapeHtml(user.accounts.x.avatar)}" style="width:22px;height:22px;border-radius:50%;" />` : '';
+        const avatar = user.accounts.x.avatar ? `<img src="${escapeHtml(user.accounts.x.avatar)}" style="width:24px;height:24px;border-radius:50%;" />` : '';
         html += `<div class="acc-row">
           <svg viewBox="0 0 24 24" fill="#000"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
           ${avatar}
-          <span class="acc-name">${dn}${badge}</span>
-          <span class="acc-status">CONNECTED</span>
-          <button class="acc-disconnect" onclick="disconnectAccount('x')">Disconnect</button>
+          <span class="acc-name">${dn}</span>
+          <span class="acc-badges">
+            ${user.accounts.x.verified ? '<span class="acc-badge-verified">VERIFIED</span>' : ''}
+            <span class="acc-badge-connected">CONNECTED</span>
+            <button class="acc-disconnect" onclick="disconnectAccount('x')">Disconnect</button>
+          </span>
         </div>`;
       }
       if (user.accounts.telegram) {
         const dn = escapeHtml(user.accounts.telegram.displayName);
-        const badge = user.accounts.telegram.verified ? '<span style="color:#059669;font-size:0.7rem;font-weight:700;"> VERIFIED</span>' : '';
-        const avatar = user.accounts.telegram.avatar ? `<img src="${escapeHtml(user.accounts.telegram.avatar)}" style="width:22px;height:22px;border-radius:50%;" />` : '';
+        const avatar = user.accounts.telegram.avatar ? `<img src="${escapeHtml(user.accounts.telegram.avatar)}" style="width:24px;height:24px;border-radius:50%;" />` : '';
         html += `<div class="acc-row">
           <svg viewBox="0 0 24 24" fill="#0088cc"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.479.33-.913.492-1.302.48-.428-.012-1.252-.242-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
           ${avatar}
-          <span class="acc-name">${dn}${badge}</span>
-          <span class="acc-status">CONNECTED</span>
-          <button class="acc-disconnect" onclick="disconnectAccount('telegram')">Disconnect</button>
+          <span class="acc-name">${dn}</span>
+          <span class="acc-badges">
+            ${user.accounts.telegram.verified ? '<span class="acc-badge-verified">VERIFIED</span>' : ''}
+            <span class="acc-badge-connected">CONNECTED</span>
+            <button class="acc-disconnect" onclick="disconnectAccount('telegram')">Disconnect</button>
+          </span>
         </div>`;
       }
       // Show option to connect missing accounts
