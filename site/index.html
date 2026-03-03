@@ -1695,7 +1695,7 @@
     updateUI();
 
     /* ═══ LOAD TOKEN INFO ═══ */
-    fetch('/token-info.json').then(r => r.ok ? r.json() : null).then(info => {
+    fetch('token-info.json').then(r => r.ok ? r.json() : null).then(info => {
       if (!info?.mint) return;
       const mint = info.mint;
       document.getElementById('ca').textContent = mint;
@@ -1718,7 +1718,7 @@
       s.src = 'https://terminal.jup.ag/main-v3.js';
       s.onload = () => {
         if (!window.Jupiter) return;
-        fetch('/token-info.json').then(r => r.ok ? r.json() : null).then(info => {
+        fetch('token-info.json').then(r => r.ok ? r.json() : null).then(info => {
           const mint = info?.mint || 'So11111111111111111111111111111111';
           const ph = document.getElementById('widget-placeholder');
           if (ph) ph.style.display = 'none';
