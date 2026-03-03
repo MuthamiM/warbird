@@ -1748,22 +1748,23 @@
           </button>
         </div>
 
-        <!-- Verify step (Step 2: shown after platform opens) -->
-        <div id="authVerifyStep" style="display:none;">
-          <div class="auth-verify-header">
-            <span id="authVerifyIcon"></span>
-            <span id="authVerifyTitle">Verify your account</span>
-          </div>
+        <!-- OAuth loading state (Step 2) -->
+        <div id="authLoadingStep" style="display:none;">
           <div class="auth-popup-status" id="authPopupStatus">
             <div class="spinner"></div>
-            <span id="authPopupMsg">Opening platform — follow/join to verify...</span>
+            <span id="authPopupMsg">Redirecting to authorization...</span>
           </div>
-          <p class="auth-verify-desc" id="authVerifyDesc"></p>
-          <div class="auth-input-group">
-            <span class="auth-input-prefix">@</span>
-            <input type="text" id="authHandleInput" class="auth-handle-input" placeholder="your_handle" maxlength="30" autocomplete="off" />
+          <button class="auth-back-btn" onclick="authGoBack()">&#8592; Cancel and go back</button>
+        </div>
+
+        <!-- Telegram widget container -->
+        <div id="telegramWidgetWrap" style="display:none;">
+          <div class="auth-verify-header">
+            <svg viewBox="0 0 24 24" style="width:28px;height:28px;fill:#0088cc"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.479.33-.913.492-1.302.48-.428-.012-1.252-.242-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+            <span>Authorize with Telegram</span>
           </div>
-          <button class="auth-verify-btn" id="authVerifyBtn" onclick="verifyHandle()">Verify &amp; Connect</button>
+          <p class="auth-verify-desc">Click the button below to authorize WARBIRD via Telegram. A Telegram dialog will ask for your permission.</p>
+          <div id="telegramWidgetContainer" style="display:flex;justify-content:center;margin:20px 0;"></div>
           <button class="auth-back-btn" onclick="authGoBack()">&#8592; Back to login options</button>
         </div>
 
@@ -1992,8 +1993,9 @@
 
     function openLoginModal() {
       document.getElementById('loginModal').classList.add('active');
-      // Reset verify step
-      document.getElementById('authVerifyStep').style.display = 'none';
+      // Reset all steps
+      document.getElementById('authLoadingStep').style.display = 'none';
+      document.getElementById('telegramWidgetWrap').style.display = 'none';
       const user = getUser();
       if (user) {
         document.getElementById('modalTitle').textContent = 'Connected Accounts';
@@ -2011,9 +2013,6 @@
 
     function closeLoginModal() {
       document.getElementById('loginModal').classList.remove('active');
-      // Clean up popup watcher
-      if (_authPopupTimer) { clearInterval(_authPopupTimer); _authPopupTimer = null; }
-      _authPlatform = null;
     }
 
     // Close modal on overlay click
@@ -2021,31 +2020,44 @@
       if (e.target === this) closeLoginModal();
     });
 
-    /* ─── Auth popup state ─── */
-    let _authPlatform = null;
-    let _authPopup = null;
-    let _authPopupTimer = null;
+    /* ─── WARBIRD API URL ─── */
+    const API_URL = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+      ? 'http://localhost:5012'
+      : 'https://your-production-api.com'; // TODO: update when deployed
+
+    /* ─── Auth state ─── */
+    let _tgWidgetLoaded = false;
 
     function loginWithX() {
       const prefs = getCookiePrefs();
       if (prefs && !prefs.functional) {
         if (!confirm('Functional cookies are disabled. Your login won\'t persist after you close the browser. Continue?')) return;
       }
-      _authPlatform = 'x';
-      // Open Twitter profile in popup — user follows @Warbirdcoin to verify
-      const w = 600, h = 700;
-      const left = (screen.width - w) / 2, top = (screen.height - h) / 2;
-      _authPopup = window.open(
-        'https://x.com/Warbirdcoin',
-        'warbird_x_auth',
-        `width=${w},height=${h},left=${left},top=${top},toolbar=no,menubar=no,scrollbars=yes`
-      );
-      showVerifyStep(
-        '<svg viewBox="0 0 24 24" style="width:28px;height:28px;fill:#000"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>',
-        'Verify with X (Twitter)',
-        'Follow <strong>@Warbirdcoin</strong> on X, then enter your handle below to connect.'
-      );
-      watchPopup();
+
+      // Show loading state
+      document.getElementById('authButtons').style.display = 'none';
+      document.getElementById('authLoadingStep').style.display = 'block';
+      document.getElementById('authPopupMsg').textContent = 'Connecting to X (Twitter) authorization...';
+
+      // Request the OAuth authorization URL from our backend
+      fetch(`${API_URL}/api/auth/twitter/authorize?returnUrl=${encodeURIComponent(window.location.href)}`)
+        .then(r => { if (!r.ok) throw new Error('API error'); return r.json(); })
+        .then(data => {
+          if (data.authUrl) {
+            document.getElementById('authPopupMsg').textContent = 'Redirecting to X (Twitter)...';
+            // Redirect to Twitter authorization page
+            // Twitter will show "Authorize WARBIRD to access your account?"
+            window.location.href = data.authUrl;
+          } else {
+            throw new Error('No auth URL returned');
+          }
+        })
+        .catch(err => {
+          console.error('Twitter auth error:', err);
+          document.getElementById('authPopupStatus').className = 'auth-popup-status';
+          document.getElementById('authPopupMsg').textContent = 'Could not connect to the server. Is the backend running?';
+          showToast('Failed to start Twitter auth. Check that the API server is running.');
+        });
     }
 
     function loginWithTelegram() {
@@ -2053,100 +2065,133 @@
       if (prefs && !prefs.functional) {
         if (!confirm('Functional cookies are disabled. Your login won\'t persist after you close the browser. Continue?')) return;
       }
-      _authPlatform = 'telegram';
-      // Open Telegram group — user joins to verify
-      const w = 600, h = 700;
-      const left = (screen.width - w) / 2, top = (screen.height - h) / 2;
-      _authPopup = window.open(
-        'https://t.me/warbirdmemecoin',
-        'warbird_tg_auth',
-        `width=${w},height=${h},left=${left},top=${top},toolbar=no,menubar=no,scrollbars=yes`
-      );
-      showVerifyStep(
-        '<svg viewBox="0 0 24 24" style="width:28px;height:28px;fill:#0088cc"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.479.33-.913.492-1.302.48-.428-.012-1.252-.242-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>',
-        'Verify with Telegram',
-        'Join the <strong>WARBIRD community</strong> on Telegram, then enter your handle below to connect.'
-      );
-      watchPopup();
-    }
 
-    function showVerifyStep(iconHtml, title, desc) {
+      // Show Telegram widget section
       document.getElementById('authButtons').style.display = 'none';
-      document.getElementById('authVerifyStep').style.display = 'block';
-      document.getElementById('authVerifyIcon').innerHTML = iconHtml;
-      document.getElementById('authVerifyTitle').textContent = title;
-      document.getElementById('authVerifyDesc').innerHTML = desc;
-      document.getElementById('authPopupStatus').className = 'auth-popup-status';
-      document.getElementById('authPopupMsg').textContent = _authPlatform === 'x'
-        ? 'Opening X (Twitter) — follow @Warbirdcoin...'
-        : 'Opening Telegram — join the community...';
-      document.getElementById('authHandleInput').value = '';
-      document.getElementById('authHandleInput').focus();
-    }
+      document.getElementById('telegramWidgetWrap').style.display = 'block';
 
-    function watchPopup() {
-      if (_authPopupTimer) clearInterval(_authPopupTimer);
-      _authPopupTimer = setInterval(() => {
-        if (_authPopup && _authPopup.closed) {
-          clearInterval(_authPopupTimer);
-          _authPopupTimer = null;
-          const statusEl = document.getElementById('authPopupStatus');
-          statusEl.className = 'auth-popup-status done';
-          document.getElementById('authPopupMsg').textContent = _authPlatform === 'x'
-            ? 'X (Twitter) visited ✓ — enter your handle below'
-            : 'Telegram visited ✓ — enter your handle below';
-          document.getElementById('authHandleInput').focus();
-        }
-      }, 500);
-    }
-
-    function verifyHandle() {
-      const input = document.getElementById('authHandleInput').value;
-      const username = sanitizeUsername(input);
-      if (!username) {
-        showToast('Invalid handle — letters, numbers, underscores only (max 30 chars)');
-        document.getElementById('authHandleInput').focus();
-        return;
+      if (!_tgWidgetLoaded) {
+        // Fetch bot username from backend, then load the official Telegram Login Widget
+        fetch(`${API_URL}/api/auth/telegram/bot-info`)
+          .then(r => { if (!r.ok) throw new Error('API error'); return r.json(); })
+          .then(data => {
+            if (data.botUsername) {
+              loadTelegramWidget(data.botUsername);
+            } else {
+              throw new Error('No bot username');
+            }
+          })
+          .catch(err => {
+            console.error('Telegram bot info error:', err);
+            showToast('Failed to load Telegram login. Check that the API server is running.');
+            authGoBack();
+          });
       }
-      const user = getUser() || { accounts: {} };
-      if (_authPlatform === 'x') {
-        user.accounts.x = {
-          username: username,
-          displayName: '@' + username,
-          avatar: null,
-          connectedAt: new Date().toISOString()
-        };
-        if (!user.primaryName) user.primaryName = '@' + username;
-        if (!user.primaryAvatar) user.primaryAvatar = null;
-        saveUser(user);
-        closeLoginModal();
-        showToast('Connected X account: @' + escapeHtml(username));
-      } else if (_authPlatform === 'telegram') {
-        user.accounts.telegram = {
-          username: username,
-          displayName: '@' + username,
-          avatar: null,
-          connectedAt: new Date().toISOString()
-        };
-        if (!user.primaryName) user.primaryName = '@' + username;
-        saveUser(user);
-        closeLoginModal();
-        showToast('Connected Telegram account: @' + escapeHtml(username));
+    }
+
+    function loadTelegramWidget(botUsername) {
+      // Create the official Telegram Login Widget script
+      // See: https://core.telegram.org/widgets/login
+      const container = document.getElementById('telegramWidgetContainer');
+      container.innerHTML = '';
+      const script = document.createElement('script');
+      script.async = true;
+      script.src = 'https://telegram.org/js/telegram-widget.js?22';
+      script.setAttribute('data-telegram-login', botUsername);
+      script.setAttribute('data-size', 'large');
+      script.setAttribute('data-onauth', 'onTelegramAuth(user)');
+      script.setAttribute('data-request-access', 'write');
+      script.setAttribute('data-radius', '8');
+      container.appendChild(script);
+      _tgWidgetLoaded = true;
+    }
+
+    // Global callback for Telegram Login Widget
+    // Called by Telegram after user authorizes the bot
+    window.onTelegramAuth = function(tgUser) {
+      // tgUser contains: id, first_name, last_name, username, photo_url, auth_date, hash
+      // Send to our backend for HMAC verification
+      document.getElementById('telegramWidgetWrap').style.display = 'none';
+      document.getElementById('authLoadingStep').style.display = 'block';
+      document.getElementById('authPopupMsg').textContent = 'Verifying Telegram authorization...';
+
+      fetch(`${API_URL}/api/auth/telegram/verify`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: tgUser.id,
+          firstName: tgUser.first_name,
+          lastName: tgUser.last_name || '',
+          username: tgUser.username || '',
+          photoUrl: tgUser.photo_url || '',
+          authDate: tgUser.auth_date,
+          hash: tgUser.hash
+        })
+      })
+      .then(r => { if (!r.ok) throw new Error('Verification failed'); return r.json(); })
+      .then(data => {
+        if (data.success) {
+          // Save verified user to local storage
+          const user = getUser() || { accounts: {} };
+          user.accounts.telegram = {
+            username: data.user.username,
+            displayName: data.user.displayName || ('@' + data.user.username),
+            avatar: data.user.profileImage || null,
+            verified: true,
+            connectedAt: new Date().toISOString()
+          };
+          if (!user.primaryName) user.primaryName = '@' + data.user.username;
+          if (data.user.profileImage) user.primaryAvatar = data.user.profileImage;
+          saveUser(user);
+          closeLoginModal();
+          showToast('Authorized with Telegram: @' + escapeHtml(data.user.username));
+        } else {
+          throw new Error(data.message || 'Unknown error');
+        }
+      })
+      .catch(err => {
+        console.error('Telegram verify error:', err);
+        showToast('Telegram verification failed. Please try again.');
+        authGoBack();
+      });
+    };
+
+    // Handle Twitter OAuth callback (page loads with ?auth_callback=twitter&data=...)
+    function handleAuthCallback() {
+      const params = new URLSearchParams(window.location.search);
+      const callback = params.get('auth_callback');
+      const data = params.get('data');
+
+      if (callback === 'twitter' && data) {
+        try {
+          const decoded = JSON.parse(atob(data));
+          if (decoded.success && decoded.user) {
+            const user = getUser() || { accounts: {} };
+            user.accounts.x = {
+              username: decoded.user.username,
+              displayName: decoded.user.displayName || ('@' + decoded.user.username),
+              avatar: decoded.user.profileImage || null,
+              verified: true,
+              connectedAt: new Date().toISOString()
+            };
+            if (!user.primaryName) user.primaryName = '@' + decoded.user.username;
+            if (decoded.user.profileImage) user.primaryAvatar = decoded.user.profileImage;
+            saveUser(user);
+            showToast('Authorized with X (Twitter): @' + escapeHtml(decoded.user.username));
+          }
+        } catch (e) {
+          console.error('Auth callback parse error:', e);
+        }
+        // Clean the URL
+        window.history.replaceState({}, document.title, window.location.pathname);
       }
     }
 
     function authGoBack() {
-      if (_authPopupTimer) { clearInterval(_authPopupTimer); _authPopupTimer = null; }
-      if (_authPopup && !_authPopup.closed) _authPopup.close();
-      _authPlatform = null;
-      document.getElementById('authVerifyStep').style.display = 'none';
+      document.getElementById('authLoadingStep').style.display = 'none';
+      document.getElementById('telegramWidgetWrap').style.display = 'none';
       document.getElementById('authButtons').style.display = 'block';
     }
-
-    // Allow Enter key in handle input
-    document.getElementById('authHandleInput').addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') verifyHandle();
-    });
 
     function disconnectAccount(platform) {
       const user = getUser();
@@ -2171,18 +2216,24 @@
       let html = '';
       if (user.accounts.x) {
         const dn = escapeHtml(user.accounts.x.displayName);
+        const badge = user.accounts.x.verified ? '<span style="color:#059669;font-size:0.7rem;font-weight:700;"> VERIFIED</span>' : '';
+        const avatar = user.accounts.x.avatar ? `<img src="${escapeHtml(user.accounts.x.avatar)}" style="width:22px;height:22px;border-radius:50%;" />` : '';
         html += `<div class="acc-row">
           <svg viewBox="0 0 24 24" fill="#000"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-          <span class="acc-name">${dn}</span>
+          ${avatar}
+          <span class="acc-name">${dn}${badge}</span>
           <span class="acc-status">CONNECTED</span>
           <button class="acc-disconnect" onclick="disconnectAccount('x')">Disconnect</button>
         </div>`;
       }
       if (user.accounts.telegram) {
         const dn = escapeHtml(user.accounts.telegram.displayName);
+        const badge = user.accounts.telegram.verified ? '<span style="color:#059669;font-size:0.7rem;font-weight:700;"> VERIFIED</span>' : '';
+        const avatar = user.accounts.telegram.avatar ? `<img src="${escapeHtml(user.accounts.telegram.avatar)}" style="width:22px;height:22px;border-radius:50%;" />` : '';
         html += `<div class="acc-row">
           <svg viewBox="0 0 24 24" fill="#0088cc"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.479.33-.913.492-1.302.48-.428-.012-1.252-.242-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
-          <span class="acc-name">${dn}</span>
+          ${avatar}
+          <span class="acc-name">${dn}${badge}</span>
           <span class="acc-status">CONNECTED</span>
           <button class="acc-disconnect" onclick="disconnectAccount('telegram')">Disconnect</button>
         </div>`;
@@ -2223,10 +2274,16 @@
         if (mobUserPill) mobUserPill.style.display = 'flex';
         document.getElementById('userName').textContent = user.primaryName || 'User';
         if (document.getElementById('mobUserName')) document.getElementById('mobUserName').textContent = user.primaryName || 'User';
-        // Generate avatar
-        const name = user.primaryName || 'U';
-        const letter = name.replace('@', '').charAt(0).toUpperCase();
-        const avatarSrc = `data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect fill='%23f7931a' width='40' height='40' rx='20'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' fill='%23fff' font-size='16' font-weight='bold'%3E${letter}%3C/text%3E%3C/svg%3E`;
+        // Use profile image from OAuth if available, otherwise generate letter avatar
+        const avatarUrl = user.primaryAvatar;
+        let avatarSrc;
+        if (avatarUrl) {
+          avatarSrc = avatarUrl;
+        } else {
+          const name = user.primaryName || 'U';
+          const letter = name.replace('@', '').charAt(0).toUpperCase();
+          avatarSrc = `data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect fill='%23f7931a' width='40' height='40' rx='20'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' fill='%23fff' font-size='16' font-weight='bold'%3E${letter}%3C/text%3E%3C/svg%3E`;
+        }
         document.getElementById('userAvatar').src = avatarSrc;
         if (document.getElementById('mobUserAvatar')) document.getElementById('mobUserAvatar').src = avatarSrc;
       } else {
@@ -2248,6 +2305,7 @@
     }
 
     // Init auth state on load
+    handleAuthCallback(); // Process Twitter OAuth redirect
     updateUI();
 
     /* ═══ LOAD TOKEN INFO ═══ */

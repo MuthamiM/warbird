@@ -11,6 +11,9 @@ builder.Services.AddDbContext<WarbirdDbContext>(opt =>
 // ═══ CONTROLLERS ═══
 builder.Services.AddControllers();
 
+// ═══ HTTP CLIENT (for OAuth token exchange) ═══
+builder.Services.AddHttpClient();
+
 // ═══ CORS — allow the GitHub Pages frontend ═══
 builder.Services.AddCors(opts =>
 {
@@ -19,8 +22,11 @@ builder.Services.AddCors(opts =>
         policy.WithOrigins(
                 "https://muthamim.github.io",
                 "http://localhost:5500",     // live-server dev
-                "http://127.0.0.1:5500"
+                "http://127.0.0.1:5500",
+                "http://localhost:3000",      // dev server
+                "http://127.0.0.1:3000"
             )
+            .AllowCredentials()
             .AllowAnyHeader()
             .AllowAnyMethod()
             .SetPreflightMaxAge(TimeSpan.FromHours(1));
@@ -91,6 +97,10 @@ app.MapGet("/", () => Results.Json(new
         profile = "GET /api/auth/{userId}",
         connectSocial = "POST /api/auth/{userId}/connect-social",
         connectWallet = "POST /api/auth/{userId}/connect-wallet",
+        twitterAuth = "GET /api/auth/twitter/authorize",
+        twitterCallback = "GET /api/auth/twitter/callback",
+        telegramBotInfo = "GET /api/auth/telegram/bot-info",
+        telegramVerify = "POST /api/auth/telegram/verify",
         contact = "POST /api/community/contact",
         subscribe = "POST /api/community/subscribe",
         unsubscribe = "DELETE /api/community/unsubscribe",
