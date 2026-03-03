@@ -24,6 +24,7 @@
   <meta property="og:site_name" content="WARBIRD" />
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@Warbirdcoin" />
   <meta name="twitter:title" content="WARBIRD — Meme Token on Solana" />
   <meta name="twitter:description" content="Zero tax. Fixed supply. Mint authority revoked. Community driven." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -86,6 +87,61 @@
       letter-spacing: 0.01em;
     }
     .top-banner a { text-decoration: underline; margin-left: 6px; }
+
+    /* ═══ ANNOUNCEMENT TICKER ═══ */
+    .announce-ticker {
+      background: linear-gradient(90deg, #1a1a2e, #16213e, #0f3460);
+      color: #fff;
+      overflow: hidden;
+      white-space: nowrap;
+      position: relative;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(247,147,26,0.3);
+    }
+    .announce-ticker::before,
+    .announce-ticker::after {
+      content: '';
+      position: absolute;
+      top: 0; bottom: 0;
+      width: 60px;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .announce-ticker::before { left: 0; background: linear-gradient(to right, #1a1a2e, transparent); }
+    .announce-ticker::after { right: 0; background: linear-gradient(to left, #0f3460, transparent); }
+    .ticker-track {
+      display: inline-flex;
+      animation: ticker-scroll 25s linear infinite;
+    }
+    .ticker-track:hover { animation-play-state: paused; }
+    .ticker-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 48px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+    .ticker-item .ticker-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px; height: 22px;
+      background: var(--orange);
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .ticker-item .ticker-icon svg { width: 12px; height: 12px; fill: #fff; }
+    .ticker-item .ticker-date {
+      color: var(--orange);
+      font-weight: 800;
+    }
+    @keyframes ticker-scroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    @media (max-width: 480px) { .ticker-item { padding: 0 32px; font-size: 0.78rem; } }
 
     /* ═══ NAVBAR ═══ */
     .navbar {
@@ -1114,7 +1170,20 @@
 
   <!-- TOP BANNER -->
   <div class="top-banner" id="topBanner">
-    Join the WARBIRD community today!<a href="https://t.me/warbirdmemecoin" target="_blank">Join Telegram</a>
+    Join the WARBIRD community today!
+    <a href="https://t.me/warbirdmemecoin" target="_blank">Telegram</a>
+    <a href="https://discord.gg/qDDNtuR8mS" target="_blank">Discord</a>
+    <a href="https://x.com/Warbirdcoin" target="_blank">Twitter / X</a>
+  </div>
+
+  <!-- ANNOUNCEMENT TICKER -->
+  <div class="announce-ticker">
+    <div class="ticker-track">
+      <span class="ticker-item"><span class="ticker-icon"><svg viewBox="0 0 24 24"><path d="M11 21h-1l1-7H7.5c-.58 0-.57-.32-.38-.66l4.38-7.84c.2-.33.52-.5.88-.5h1l-1 7h3.5c.49 0 .56.33.47.51l-4.48 8C11.68 20.83 11.36 21 11 21z"/></svg></span> $WARBIRD token will be ready for mining on <span class="ticker-date">April 1st, 2026</span> — Stay tuned!</span>
+      <span class="ticker-item"><span class="ticker-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></span> Join our community on Telegram, Discord & Twitter for updates</span>
+      <span class="ticker-item"><span class="ticker-icon"><svg viewBox="0 0 24 24"><path d="M11 21h-1l1-7H7.5c-.58 0-.57-.32-.38-.66l4.38-7.84c.2-.33.52-.5.88-.5h1l-1 7h3.5c.49 0 .56.33.47.51l-4.48 8C11.68 20.83 11.36 21 11 21z"/></svg></span> $WARBIRD token will be ready for mining on <span class="ticker-date">April 1st, 2026</span> — Stay tuned!</span>
+      <span class="ticker-item"><span class="ticker-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></span> Join our community on Telegram, Discord & Twitter for updates</span>
+    </div>
   </div>
 
   <!-- NAVBAR -->
@@ -1151,9 +1220,9 @@
           Community
           <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>
           <div class="dropdown">
-            <a href="https://x.com" target="_blank">Twitter / X</a>
+            <a href="https://x.com/Warbirdcoin" target="_blank">Twitter / X</a>
             <a href="https://t.me/warbirdmemecoin" target="_blank">Telegram</a>
-            <a href="https://discord.com" target="_blank">Discord</a>
+            <a href="https://discord.gg/qDDNtuR8mS" target="_blank">Discord</a>
           </div>
         </div>
         <a class="nav-item" href="#roadmap">Roadmap</a>
@@ -1490,7 +1559,7 @@
           <ul class="rm-items">
             <li>Token creation and deployment on Solana</li>
             <li>Website launch with full transparency</li>
-            <li>Community channels — Telegram, Twitter/X</li>
+            <li>Community channels — <a href="https://t.me/warbirdmemecoin" target="_blank" style="color:var(--orange)">Telegram</a>, <a href="https://x.com/Warbirdcoin" target="_blank" style="color:var(--orange)">Twitter/X</a>, <a href="https://discord.gg/qDDNtuR8mS" target="_blank" style="color:var(--orange)">Discord</a></li>
             <li>Whitepaper publication</li>
             <li>Initial community building</li>
           </ul>
@@ -1566,9 +1635,9 @@
         <div>
           <h4>Community</h4>
           <div class="footer-links">
-            <a href="https://x.com" target="_blank">Twitter / X</a>
+            <a href="https://x.com/Warbirdcoin" target="_blank">Twitter / X</a>
             <a href="https://t.me/warbirdmemecoin" target="_blank">Telegram</a>
-            <a href="https://discord.com" target="_blank">Discord</a>
+            <a href="https://discord.gg/qDDNtuR8mS" target="_blank">Discord</a>
             <a href="whitepaper.html">Whitepaper</a>
             <a href="privacy.html">Privacy Policy</a>
             <a href="#" onclick="openCookieSettings(); return false;">Cookie Settings</a>
