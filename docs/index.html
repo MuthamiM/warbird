@@ -1337,18 +1337,28 @@
         <div class="tok-rows">
           <div class="tok-row">
             <div class="tok-dot" style="background:var(--orange)"></div>
-            <div class="tok-info"><div class="tok-name">Liquidity Pool</div><div class="tok-desc">Locked LP, burned for trust</div></div>
-            <div class="tok-pct">90%</div>
+            <div class="tok-info"><div class="tok-name">Liquidity Pool</div><div class="tok-desc">Locked LP on Raydium/Orca — burned for permanent trust</div></div>
+            <div class="tok-pct">40%</div>
+          </div>
+          <div class="tok-row">
+            <div class="tok-dot" style="background:#3b82f6"></div>
+            <div class="tok-info"><div class="tok-name">Community / Airdrop</div><div class="tok-desc">Airdrops, rewards, contests, staking incentives</div></div>
+            <div class="tok-pct" style="color:#3b82f6">20%</div>
           </div>
           <div class="tok-row">
             <div class="tok-dot" style="background:#f59e0b"></div>
-            <div class="tok-info"><div class="tok-name">Marketing</div><div class="tok-desc">Community campaigns, KOLs</div></div>
-            <div class="tok-pct" style="color:#f59e0b">5%</div>
+            <div class="tok-info"><div class="tok-name">Marketing</div><div class="tok-desc">KOL partnerships, campaigns, exchange listings</div></div>
+            <div class="tok-pct" style="color:#f59e0b">15%</div>
           </div>
           <div class="tok-row">
             <div class="tok-dot" style="background:var(--green)"></div>
-            <div class="tok-info"><div class="tok-name">Team / Dev</div><div class="tok-desc">Development &amp; CEX listings</div></div>
-            <div class="tok-pct" style="color:var(--green)">5%</div>
+            <div class="tok-info"><div class="tok-name">Team / Dev</div><div class="tok-desc">6-month cliff, 12-month vesting — locked &amp; transparent</div></div>
+            <div class="tok-pct" style="color:var(--green)">15%</div>
+          </div>
+          <div class="tok-row">
+            <div class="tok-dot" style="background:#8b5cf6"></div>
+            <div class="tok-info"><div class="tok-name">Reserve / Burns</div><div class="tok-desc">Strategic reserve — unneeded tokens will be burned</div></div>
+            <div class="tok-pct" style="color:#8b5cf6">10%</div>
           </div>
         </div>
       </div>
@@ -1779,9 +1789,11 @@
       const ds = parseInt(getComputedStyle(c).width);
       c.width = ds * dpr; c.height = ds * dpr; ctx.scale(dpr, dpr);
       const data = [
-        { p: 0.9, color: '#f7931a' },
-        { p: 0.05, color: '#f59e0b' },
-        { p: 0.05, color: '#16c784' }
+        { p: 0.40, color: '#f7931a' },
+        { p: 0.20, color: '#3b82f6' },
+        { p: 0.15, color: '#f59e0b' },
+        { p: 0.15, color: '#16c784' },
+        { p: 0.10, color: '#8b5cf6' }
       ];
       let prog = 0, started = false;
       const obs = new IntersectionObserver(e => {

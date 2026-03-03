@@ -1,6 +1,15 @@
 node_modules/
 .env
 wallet.json
+wallets/
 *.keypair
 dist/
 token-info.json
+distribution-record.json
+vesting-schedule.json
+lp-config.json
+airdrop-list.json
+airdrop-report-*.json
+warbird.db
+warbird.db-shm
+warbird.db-wal

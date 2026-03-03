@@ -9,6 +9,13 @@
     "create-token:devnet": "node -e \"process.env.SOLANA_CLUSTER='devnet'\" && node scripts/create-token.js",
     "create-token:mainnet": "node -e \"process.env.SOLANA_CLUSTER='mainnet-beta'\" && node scripts/create-token.js",
     "upload-metadata": "node scripts/upload-metadata.js",
+    "distribute": "node scripts/distribute-tokens.js",
+    "airdrop-community": "node scripts/airdrop-community.js",
+    "vesting": "node scripts/vesting.js status",
+    "vesting:setup": "node scripts/vesting.js setup",
+    "vesting:release": "node scripts/vesting.js release",
+    "create-lp": "node scripts/create-lp.js",
+    "pre-check": "node scripts/pre-listing-check.js",
     "dev": "npx live-server site --port=3000"
   },
   "dependencies": {
