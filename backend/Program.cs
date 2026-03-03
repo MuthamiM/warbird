@@ -5,8 +5,11 @@ using WarbirdApi.Data;
 var builder = WebApplication.CreateBuilder(args);
 
 // ═══ DATABASE ═══
+var dbPath = builder.Environment.IsProduction()
+    ? Path.Combine("/app/data", "warbird.db")
+    : "warbird.db";
 builder.Services.AddDbContext<WarbirdDbContext>(opt =>
-    opt.UseSqlite(builder.Configuration.GetConnectionString("Default") ?? "Data Source=warbird.db"));
+    opt.UseSqlite(builder.Configuration.GetConnectionString("Default") ?? $"Data Source={dbPath}"));
 
 // ═══ CONTROLLERS ═══
 builder.Services.AddControllers();
@@ -21,6 +24,7 @@ builder.Services.AddCors(opts =>
     {
         policy.WithOrigins(
                 "https://muthamim.github.io",
+                "https://warbird-api.azurewebsites.net",
                 "http://localhost:5500",     // live-server dev
                 "http://127.0.0.1:5500",
                 "http://localhost:3000",      // dev server
