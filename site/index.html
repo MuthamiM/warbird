@@ -1772,9 +1772,14 @@
         </div>
 
         <!-- Telegram widget container -->
+        <!-- Telegram auth (redirect-based) -->
         <div id="telegramWidgetWrap" style="display:none;">
-          <p style="font-size:0.85rem;color:#666;margin-bottom:12px;text-align:center;">Log in with your Telegram account</p>
-          <div id="telegramWidgetContainer" style="display:flex;justify-content:center;margin:12px 0;"></div>
+          <div style="text-align:center;padding:20px 0;">
+            <div id="telegramWidgetContainer">
+              <div class="auth-popup-spinner"></div>
+              <p style="font-size:0.82rem;color:#666;margin-top:8px;">Connecting to Telegram...</p>
+            </div>
+          </div>
           <button class="auth-back-btn" onclick="authGoBack()">&#8592; Back to login options</button>
         </div>
 
@@ -2033,13 +2038,12 @@
       : 'https://warbird-api.azurewebsites.net';
 
     /* ─── Auth state ─── */
-    let _tgWidgetLoaded = false;
 
     function loginWithX() {
       // Show loading state
       document.getElementById('authButtons').style.display = 'none';
       document.getElementById('authLoadingStep').style.display = 'block';
-      document.getElementById('authPopupMsg').textContent = 'Connecting to X (Twitter) authorization...';
+      document.getElementById('authPopupMsg').textContent = 'Connecting to X (Twitter)...';
 
       // Request the OAuth authorization URL from our backend
       fetch(`${API_URL}/api/auth/twitter/authorize?returnUrl=${encodeURIComponent(window.location.href)}`)
@@ -2047,8 +2051,6 @@
         .then(data => {
           if (data.authUrl) {
             document.getElementById('authPopupMsg').textContent = 'Redirecting to X (Twitter)...';
-            // Redirect to Twitter authorization page
-            // Twitter will show "Authorize WARBIRD to access your account?"
             window.location.href = data.authUrl;
           } else {
             throw new Error('No auth URL returned');
@@ -2057,54 +2059,36 @@
         .catch(err => {
           console.error('Twitter auth error:', err);
           document.getElementById('authPopupStatus').className = 'auth-popup-status';
-          document.getElementById('authPopupMsg').textContent = 'Could not connect to the server. Is the backend running?';
-          showToast('Failed to start Twitter auth. Check that the API server is running.');
+          document.getElementById('authPopupMsg').textContent = 'Could not connect to the server. Try again or use a different browser.';
+          showToast('Failed to start X auth. If on desktop, try incognito/private mode.');
         });
     }
 
     function loginWithTelegram() {
-      // Show Telegram widget section
+      // Show loading state
       document.getElementById('authButtons').style.display = 'none';
       document.getElementById('telegramWidgetWrap').style.display = 'block';
 
-      if (!_tgWidgetLoaded) {
-        // Fetch bot username from backend, then load the official Telegram Login Widget
-        fetch(`${API_URL}/api/auth/telegram/bot-info`)
-          .then(r => { if (!r.ok) throw new Error('API error'); return r.json(); })
-          .then(data => {
-            if (data.botUsername) {
-              loadTelegramWidget(data.botUsername, data.botId);
-            } else {
-              throw new Error('No bot username');
-            }
-          })
-          .catch(err => {
-            console.error('Telegram bot info error:', err);
-            showToast('Failed to load Telegram login. Check that the API server is running.');
-            authGoBack();
-          });
-      }
+      // Fetch bot info then redirect to Telegram OAuth
+      fetch(`${API_URL}/api/auth/telegram/bot-info`)
+        .then(r => { if (!r.ok) throw new Error('API error'); return r.json(); })
+        .then(data => {
+          if (!data.botId) throw new Error('No bot ID');
+          // Redirect to Telegram OAuth — after auth, Telegram redirects back with #tgAuthResult=base64data
+          const returnUrl = window.location.origin + window.location.pathname;
+          window.location.href = `https://oauth.telegram.org/auth?bot_id=${data.botId}&origin=${encodeURIComponent(window.location.origin)}&return_to=${encodeURIComponent(returnUrl)}&request_access=write`;
+        })
+        .catch(err => {
+          console.error('Telegram auth error:', err);
+          showToast('Failed to connect to Telegram. Try again.');
+          authGoBack();
+        });
     }
 
-    function loadTelegramWidget(botUsername, botId) {
-      const container = document.getElementById('telegramWidgetContainer');
-      container.innerHTML = '';
-      _tgWidgetLoaded = true;
+    // (loadTelegramWidget removed — using redirect-based flow instead)
 
-      // Official Telegram Login Widget (domain set in BotFather)
-      const script = document.createElement('script');
-      script.async = true;
-      script.src = 'https://telegram.org/js/telegram-widget.js?22';
-      script.setAttribute('data-telegram-login', botUsername);
-      script.setAttribute('data-size', 'medium');
-      script.setAttribute('data-onauth', 'onTelegramAuth(user)');
-      script.setAttribute('data-request-access', 'write');
-      script.setAttribute('data-radius', '6');
-      container.appendChild(script);
-    }
-
-    // Global callback for Telegram Login Widget
-    // Called by Telegram after user authorizes the bot
+    // Global callback for Telegram auth
+    // Called after redirect back from Telegram OAuth or from widget
     window.onTelegramAuth = function(tgUser) {
       // tgUser contains: id, first_name, last_name, username, photo_url, auth_date, hash
       // Send to our backend for HMAC verification
@@ -2154,7 +2138,9 @@
     };
 
     // Handle Twitter OAuth callback (page loads with ?auth_callback=twitter&data=...)
+    // Handle Telegram OAuth callback (page loads with #tgAuthResult=base64data)
     function handleAuthCallback() {
+      // --- Twitter callback ---
       const params = new URLSearchParams(window.location.search);
       const callback = params.get('auth_callback');
       const data = params.get('data');
@@ -2179,8 +2165,24 @@
         } catch (e) {
           console.error('Auth callback parse error:', e);
         }
-        // Clean the URL
         window.history.replaceState({}, document.title, window.location.pathname);
+      }
+
+      // --- Telegram callback ---
+      const hash = window.location.hash;
+      if (hash && hash.startsWith('#tgAuthResult=')) {
+        try {
+          const encoded = hash.substring('#tgAuthResult='.length);
+          const json = atob(encoded);
+          const tgUser = JSON.parse(json);
+          // Clear hash immediately
+          window.history.replaceState({}, document.title, window.location.pathname + window.location.search);
+          // Process the Telegram auth
+          onTelegramAuth(tgUser);
+        } catch (e) {
+          console.error('Telegram auth callback parse error:', e);
+          showToast('Telegram authorization failed. Please try again.');
+        }
       }
     }
 
