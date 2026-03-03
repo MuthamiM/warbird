@@ -57,11 +57,11 @@ public class TwitterAuthController : ControllerBase
         _pendingChallenges[state] = new PkceChallenge(codeVerifier, returnUrl ?? "/", DateTime.UtcNow.AddMinutes(10));
         CleanExpiredChallenges();
 
-        var authUrl = "https://twitter.com/i/oauth2/authorize" +
+        var authUrl = "https://x.com/i/oauth2/authorize" +
             $"?response_type=code" +
             $"&client_id={Uri.EscapeDataString(clientId)}" +
             $"&redirect_uri={Uri.EscapeDataString(redirectUri)}" +
-            $"&scope={Uri.EscapeDataString("tweet.read users.read offline.access")}" +
+            $"&scope={Uri.EscapeDataString("tweet.read users.read")}" +
             $"&state={state}" +
             $"&code_challenge={codeChallenge}" +
             $"&code_challenge_method=S256";

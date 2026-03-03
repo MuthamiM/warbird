@@ -2043,24 +2043,56 @@
       // Show loading state
       document.getElementById('authButtons').style.display = 'none';
       document.getElementById('authLoadingStep').style.display = 'block';
-      document.getElementById('authPopupMsg').textContent = 'Connecting to X (Twitter)...';
+      document.getElementById('authPopupMsg').textContent = 'Connecting to X...';
 
-      // Request the OAuth authorization URL from our backend
       fetch(`${API_URL}/api/auth/twitter/authorize?returnUrl=${encodeURIComponent(window.location.href)}`)
         .then(r => { if (!r.ok) throw new Error('API error'); return r.json(); })
         .then(data => {
-          if (data.authUrl) {
-            document.getElementById('authPopupMsg').textContent = 'Redirecting to X (Twitter)...';
+          if (!data.authUrl) throw new Error('No auth URL returned');
+
+          // On desktop: open popup window (avoids extension interference)
+          // On mobile: redirect directly (mobile browsers handle popups poorly)
+          const isMobile = /Android|iPhone|iPad|iPod|Opera Mini|IEMobile/i.test(navigator.userAgent);
+          if (isMobile) {
+            document.getElementById('authPopupMsg').textContent = 'Redirecting to X...';
             window.location.href = data.authUrl;
           } else {
-            throw new Error('No auth URL returned');
+            document.getElementById('authPopupMsg').textContent = 'Opening X authorization window...';
+            const w = 500, h = 700;
+            const left = (screen.width - w) / 2, top = (screen.height - h) / 2;
+            const popup = window.open(data.authUrl, 'x_auth', `width=${w},height=${h},left=${left},top=${top},toolbar=no,menubar=no`);
+            if (!popup || popup.closed) {
+              // Popup blocked — fall back to redirect
+              document.getElementById('authPopupMsg').textContent = 'Redirecting to X...';
+              window.location.href = data.authUrl;
+              return;
+            }
+            // Poll for popup close / redirect back
+            document.getElementById('authPopupMsg').textContent = 'Authorize in the popup window, then wait...';
+            const pollTimer = setInterval(() => {
+              try {
+                if (popup.closed) {
+                  clearInterval(pollTimer);
+                  // Check if auth completed (user data saved by callback redirect)
+                  const user = getUser();
+                  if (user && user.accounts && user.accounts.x) {
+                    updateUI();
+                    openLoginModal();
+                    showToast('Connected X: @' + escapeHtml(user.accounts.x.username));
+                  } else {
+                    document.getElementById('authPopupMsg').textContent = 'Authorization window closed. Click below to try again.';
+                    authGoBack();
+                  }
+                }
+              } catch(e) { /* cross-origin, keep polling */ }
+            }, 500);
           }
         })
         .catch(err => {
           console.error('Twitter auth error:', err);
           document.getElementById('authPopupStatus').className = 'auth-popup-status';
-          document.getElementById('authPopupMsg').textContent = 'Could not connect to the server. Try again or use a different browser.';
-          showToast('Failed to start X auth. If on desktop, try incognito/private mode.');
+          document.getElementById('authPopupMsg').textContent = 'Could not connect to server. Try again.';
+          showToast('Failed to start X auth.');
         });
     }
 
