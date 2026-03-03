@@ -1,0 +1,1740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WARBIRD — Innovative Meme Token on Solana</title>
+  <meta name="description" content="WARBIRD is an innovative meme token on the Solana network. Zero tax. Fixed supply. Community driven." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --orange: #f7931a;
+      --orange-dark: #e8850f;
+      --orange-light: #ffa940;
+      --orange-bg: #fff8f0;
+      --green: #16c784;
+      --green-bg: #eafaf1;
+      --red: #ea3943;
+      --blue: #1da1f2;
+      --telegram: #0088cc;
+      --bg: #ffffff;
+      --bg-alt: #f9f9f9;
+      --bg-dark: #1d1d1d;
+      --text: #1d1d1d;
+      --text2: #4a4a4a;
+      --text3: #888888;
+      --text4: #b0b0b0;
+      --border: #e8e8e8;
+      --border2: #d0d0d0;
+      --shadow: rgba(0,0,0,0.06);
+      --shadow2: rgba(0,0,0,0.1);
+      --radius: 4px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+    }
+
+    html { scroll-behavior: smooth; overflow-x: hidden; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; }
+    ::selection { background: var(--orange); color: #fff; }
+
+    .container { max-width: 1140px; margin: 0 auto; padding: 0 24px; }
+
+    /* ═══ TOP BANNER ═══ */
+    .top-banner {
+      background: var(--orange);
+      color: #fff;
+      text-align: center;
+      padding: 10px 24px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+    }
+    .top-banner a { text-decoration: underline; margin-left: 6px; }
+
+    /* ═══ NAVBAR ═══ */
+    .navbar {
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 1px 3px var(--shadow);
+    }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 70px;
+    }
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--text);
+    }
+    .nav-logo {
+      width: 36px;
+      height: 36px;
+      background: var(--orange);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .nav-logo svg { width: 20px; height: 20px; fill: #fff; }
+
+    .nav-center { display: flex; align-items: center; gap: 0; }
+    .nav-item {
+      position: relative;
+      padding: 0 20px;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text2);
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .nav-item:hover { color: var(--orange); }
+    .nav-item svg {
+      width: 12px; height: 12px; margin-left: 5px;
+      fill: var(--text3); transition: transform 0.2s;
+    }
+    .nav-item:hover svg { transform: rotate(180deg); fill: var(--orange); }
+    .nav-item .dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-top: 3px solid var(--orange);
+      min-width: 220px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-4px);
+      transition: all 0.2s ease;
+      z-index: 100;
+    }
+    .nav-item:hover .dropdown {
+      opacity: 1; visibility: visible; transform: translateY(0);
+    }
+    .dropdown a {
+      display: block;
+      padding: 12px 20px;
+      font-size: 0.88rem;
+      color: var(--text);
+      font-weight: 500;
+      transition: background 0.15s, color 0.15s;
+      border-bottom: 1px solid var(--border);
+    }
+    .dropdown a:last-child { border-bottom: none; }
+    .dropdown a:hover { background: var(--orange-bg); color: var(--orange); }
+
+    .nav-right { display: flex; align-items: center; gap: 16px; }
+    .nav-auth-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 20px;
+      border-radius: var(--radius);
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--text);
+      transition: all 0.2s;
+    }
+    .nav-auth-btn:hover { border-color: var(--orange); color: var(--orange); }
+    .nav-auth-btn svg { width: 16px; height: 16px; }
+    .nav-user-pill {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 14px 6px 6px;
+      border-radius: 100px;
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      position: relative;
+    }
+    .nav-user-pill img {
+      width: 30px; height: 30px; border-radius: 50%; object-fit: cover;
+    }
+    .nav-user-pill .user-menu {
+      position: absolute; top: calc(100% + 8px); right: 0;
+      background: #fff; border: 1px solid var(--border);
+      border-radius: var(--radius-md); min-width: 200px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+      display: none; z-index: 999;
+    }
+    .nav-user-pill:hover .user-menu { display: block; }
+    .user-menu a, .user-menu button {
+      display: block; width: 100%; text-align: left;
+      padding: 12px 16px; font-size: 0.85rem; color: var(--text);
+      font-weight: 500; border: none; background: none;
+      border-bottom: 1px solid var(--border); cursor: pointer;
+    }
+    .user-menu a:last-child, .user-menu button:last-child { border-bottom: none; }
+    .user-menu a:hover, .user-menu button:hover { background: var(--orange-bg); color: var(--orange); }
+
+    .mob-toggle { display: none; background: none; border: none; cursor: pointer; padding: 8px; }
+    .mob-toggle span { display: block; width: 22px; height: 2px; background: var(--text); margin: 5px 0; border-radius: 2px; transition: all 0.3s; }
+
+    @media (max-width: 860px) {
+      .mob-toggle { display: block; }
+      .nav-center {
+        position: fixed; top: 70px; left: 0; right: 0; bottom: 0;
+        background: #fff; flex-direction: column; align-items: stretch;
+        padding: 16px 0; overflow-y: auto;
+        transform: translateX(100%); transition: transform 0.3s;
+        border-top: 1px solid var(--border); z-index: 999;
+      }
+      .nav-center.open { transform: translateX(0); }
+      .nav-item { height: auto; padding: 14px 24px; border-bottom: 1px solid var(--border); }
+      .nav-item .dropdown {
+        position: static; border: none; box-shadow: none; border-top: none;
+        opacity: 1; visibility: visible; transform: none;
+        display: none; background: var(--bg-alt);
+      }
+      .nav-item.mob-open .dropdown { display: block; }
+      .nav-right { display: none; }
+      .mob-auth-wrapper {
+        display: block !important;
+        padding: 16px 24px;
+        border-top: 1px solid var(--border);
+      }
+      .mob-auth-wrapper .nav-auth-btn,
+      .mob-auth-wrapper .nav-user-pill {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    /* ═══ HERO ═══ */
+    .hero {
+      background: var(--bg-alt);
+      border-bottom: 1px solid var(--border);
+      padding: 80px 0 90px;
+      text-align: center;
+    }
+    .hero h1 {
+      font-size: clamp(1.6rem, 5vw, 3.6rem);
+      font-weight: 300;
+      line-height: 1.3;
+      color: var(--text);
+      max-width: 780px;
+      margin: 0 auto 48px;
+      padding: 0 8px;
+    }
+    .hero h1 strong { font-weight: 800; color: var(--orange); }
+    .hero-btns {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+      padding: 0 16px;
+    }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 48px;
+      background: var(--orange);
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 600;
+      border: 2px solid var(--orange);
+      border-radius: var(--radius);
+      transition: all 0.2s;
+    }
+    .btn-primary:hover { background: var(--orange-dark); border-color: var(--orange-dark); }
+    .btn-primary svg { width: 18px; height: 18px; fill: #fff; }
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 48px;
+      background: transparent;
+      color: var(--orange);
+      font-size: 1rem;
+      font-weight: 600;
+      border: 2px solid var(--orange);
+      border-radius: var(--radius);
+      transition: all 0.2s;
+    }
+    .btn-secondary:hover { background: var(--orange-bg); }
+    .btn-secondary svg { width: 18px; height: 18px; fill: var(--orange); }
+    .hero-scroll {
+      display: block;
+      margin: 56px auto 0;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #fff;
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: bounce 2s infinite;
+      cursor: pointer;
+    }
+    .hero-scroll svg { width: 20px; height: 20px; fill: var(--text3); }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(8px); }
+    }
+
+    @media (max-width: 600px) {
+      .hero { padding: 48px 0 56px; }
+      .hero h1 { margin-bottom: 32px; }
+      .hero-btns { flex-direction: column; align-items: center; gap: 12px; }
+      .btn-primary, .btn-secondary { width: 100%; max-width: 340px; justify-content: center; padding: 14px 24px; font-size: 0.9rem; }
+      .hero-scroll { margin-top: 36px; }
+    }
+
+    /* ═══ SECTION ═══ */
+    .section { padding: 80px 0; }
+    .section.alt { background: var(--bg-alt); }
+    @media (max-width: 600px) {
+      .section { padding: 48px 0; }
+      .sec-header { margin-bottom: 32px; }
+      .sec-header p { font-size: 0.92rem; padding: 0 8px; }
+    }
+    .sec-header { text-align: center; margin-bottom: 56px; }
+    .sec-header h2 {
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      font-weight: 800;
+      margin-bottom: 12px;
+      color: var(--text);
+    }
+    .sec-header h2 .orange { color: var(--orange); }
+    .sec-header p {
+      font-size: 1.05rem;
+      color: var(--text2);
+      max-width: 560px;
+      margin: 0 auto;
+      font-weight: 400;
+    }
+
+    /* ═══ STATS ═══ */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      margin: 0 0 80px;
+    }
+    .stat-item {
+      padding: 32px 24px;
+      text-align: center;
+      border-right: 1px solid var(--border);
+      transition: background 0.2s;
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-item:hover { background: var(--orange-bg); }
+    .stat-val {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .stat-val.orange { color: var(--orange); }
+    .stat-val.green { color: var(--green); }
+    .stat-lbl {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--text3);
+      font-weight: 600;
+    }
+    @media (max-width: 700px) {
+      .stats-bar { grid-template-columns: 1fr 1fr; }
+      .stat-item:nth-child(2) { border-right: none; }
+      .stat-item:nth-child(1), .stat-item:nth-child(2) { border-bottom: 1px solid var(--border); }
+    }
+    @media (max-width: 440px) {
+      .stats-bar { grid-template-columns: 1fr; }
+      .stat-item { border-right: none; border-bottom: 1px solid var(--border); padding: 20px 16px; }
+      .stat-item:last-child { border-bottom: none; }
+      .stat-val { font-size: 1.4rem; }
+    }
+
+    /* ═══ INFO GRID ═══ */
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: start;
+    }
+    .info-text h3 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+    .info-text p {
+      font-size: 0.95rem;
+      color: var(--text2);
+      line-height: 1.8;
+      margin-bottom: 14px;
+    }
+    .info-features {
+      list-style: none;
+      margin-top: 20px;
+    }
+    .info-features li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.92rem;
+      color: var(--text2);
+    }
+    .info-features li:last-child { border-bottom: none; }
+    .info-features .check {
+      width: 22px;
+      height: 22px;
+      flex-shrink: 0;
+      background: var(--green-bg);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1px;
+    }
+    .info-features .check svg { width: 12px; height: 12px; fill: var(--green); }
+    .info-visual {
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 40px;
+      text-align: center;
+    }
+    @media (max-width: 768px) { .info-grid { grid-template-columns: 1fr; gap: 32px; } }
+    @media (max-width: 480px) { .info-visual { padding: 24px; } .info-visual canvas { width: 100% !important; height: auto !important; } }
+
+    /* ═══ TOKENOMICS ═══ */
+    .tok-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+    .tok-chart { display: flex; justify-content: center; }
+    #donutCanvas { width: 320px; height: 320px; }
+    .donut-wrap { position: relative; display: inline-block; }
+    .donut-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+    .donut-center strong {
+      display: block;
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--orange);
+    }
+    .donut-center span {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--text3);
+      font-weight: 600;
+    }
+    .tok-rows { display: flex; flex-direction: column; gap: 12px; }
+    .tok-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 20px 24px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      transition: all 0.2s;
+    }
+    .tok-row:hover { border-color: var(--orange); background: var(--orange-bg); }
+    .tok-dot { width: 14px; height: 14px; border-radius: 4px; flex-shrink: 0; }
+    .tok-info { flex: 1; }
+    .tok-name { font-weight: 700; font-size: 0.95rem; }
+    .tok-desc { font-size: 0.8rem; color: var(--text3); margin-top: 2px; }
+    .tok-pct { font-size: 1.4rem; font-weight: 800; color: var(--orange); }
+    @media (max-width: 768px) { .tok-layout { grid-template-columns: 1fr; gap: 32px; } }
+    @media (max-width: 400px) { #donutCanvas { width: 260px !important; height: 260px !important; } .donut-center strong { font-size: 1.5rem; } }
+
+    /* ═══ STEPS ═══ */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+    .step {
+      padding: 40px 28px;
+      border-right: 1px solid var(--border);
+      transition: background 0.2s;
+    }
+    .step:last-child { border-right: none; }
+    .step:hover { background: var(--orange-bg); }
+    .step-num {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      line-height: 40px;
+      text-align: center;
+      border-radius: 50%;
+      background: var(--orange);
+      color: #fff;
+      font-weight: 800;
+      font-size: 1rem;
+      margin-bottom: 20px;
+    }
+    .step h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .step p {
+      font-size: 0.88rem;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+    .step-btn {
+      display: inline-block;
+      margin-top: 16px;
+      padding: 10px 20px;
+      background: var(--orange);
+      color: #fff;
+      font-size: 0.85rem;
+      font-weight: 700;
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+      cursor: pointer;
+    }
+    .step-btn:hover {
+      background: #e8850f;
+      transform: translateY(-1px);
+    }
+    .step-btn.outline {
+      background: transparent;
+      border: 1.5px solid var(--orange);
+      color: var(--orange);
+    }
+    .step-btn.outline:hover {
+      background: var(--orange);
+      color: #fff;
+    }
+    @media (max-width: 768px) { .steps-grid { grid-template-columns: 1fr 1fr; } .step:nth-child(2) { border-right: none; } .step:nth-child(1), .step:nth-child(2) { border-bottom: 1px solid var(--border); } .step:nth-child(3), .step:nth-child(4) { border-bottom: none; } .step:nth-child(3) { border-bottom: 0; } }
+    @media (max-width: 480px) { .steps-grid { grid-template-columns: 1fr; } .step { border-right: none; border-bottom: 1px solid var(--border); padding: 28px 20px; } .step:last-child { border-bottom: none; } }
+    @media (max-width: 600px) { .step-btn { padding: 9px 16px; font-size: 0.8rem; margin-right: 6px; } }
+
+    /* ═══ BUY CARDS ═══ */
+    .buy-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .buy-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 32px 24px;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.2s;
+      position: relative;
+    }
+    .buy-card:hover { border-color: var(--orange); box-shadow: 0 4px 20px var(--shadow); }
+    .buy-card-badge {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 3px;
+    }
+    .buy-card-badge.hot { background: var(--orange-bg); color: var(--orange); border: 1px solid rgba(247,147,26,0.2); }
+    .buy-card-badge.fiat { background: var(--green-bg); color: var(--green); border: 1px solid rgba(22,199,132,0.2); }
+    .buy-card-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .buy-card-icon svg { width: 22px; height: 22px; }
+    .buy-card-icon.c-orange { background: var(--orange-bg); }
+    .buy-card-icon.c-orange svg { fill: var(--orange); }
+    .buy-card-icon.c-green { background: var(--green-bg); }
+    .buy-card-icon.c-green svg { fill: var(--green); }
+    .buy-card-icon.c-blue { background: #eff6ff; }
+    .buy-card-icon.c-blue svg { fill: #3b82f6; }
+    .buy-card-icon.c-purple { background: #f3f0ff; }
+    .buy-card-icon.c-purple svg { fill: #7c3aed; }
+    .buy-card-icon.c-yellow { background: #fffbeb; }
+    .buy-card-icon.c-yellow svg { fill: #f59e0b; }
+    .buy-card-icon.c-dark { background: #f3f4f6; }
+    .buy-card-icon.c-dark svg { fill: #374151; }
+    .buy-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 8px; }
+    .buy-card p { font-size: 0.88rem; color: var(--text2); line-height: 1.7; flex: 1; }
+    .buy-card .card-btn {
+      display: block;
+      text-align: center;
+      margin-top: 20px;
+      padding: 12px 20px;
+      border-radius: var(--radius);
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.2s;
+      border: 2px solid;
+    }
+    .buy-card .card-btn.primary { background: var(--orange); border-color: var(--orange); color: #fff; }
+    .buy-card .card-btn.primary:hover { background: var(--orange-dark); border-color: var(--orange-dark); }
+    .buy-card .card-btn.outline { background: transparent; border-color: var(--border2); color: var(--text); }
+    .buy-card .card-btn.outline:hover { border-color: var(--orange); color: var(--orange); }
+    .tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 14px; }
+    .tag {
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 3px;
+      background: var(--bg-alt);
+      color: var(--text3);
+      border: 1px solid var(--border);
+    }
+    @media (max-width: 900px) { .buy-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 580px) { .buy-grid { grid-template-columns: 1fr; } .buy-card { padding: 24px 18px; } .buy-card h3 { font-size: 0.95rem; } }
+
+    /* ═══ PAYMENT METHODS ═══ */
+    .pay-row { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 48px; }
+    .pay-chip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-radius: 100px;
+      background: #fff;
+      border: 1px solid var(--border);
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text2);
+      transition: all 0.2s;
+    }
+    .pay-chip:hover { border-color: var(--orange); color: var(--orange); }
+    .pay-chip svg { width: 16px; height: 16px; fill: var(--text4); }
+    .pay-chip:hover svg { fill: var(--orange); }
+    @media (max-width: 480px) { .pay-row { gap: 6px; } .pay-chip { padding: 8px 12px; font-size: 0.72rem; } .pay-chip svg { width: 14px; height: 14px; } }
+
+    /* ═══ SWAP + CHART ═══ */
+    .swap-chart-grid { display: grid; grid-template-columns: 1fr 1.3fr; gap: 32px; margin-top: 64px; }
+    .swap-box, .chart-box {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+    .swap-box-header, .chart-box-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 20px;
+      background: var(--bg-alt);
+      border-bottom: 1px solid var(--border);
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+    .swap-box-header svg, .chart-box-header svg { width: 16px; height: 16px; fill: var(--orange); }
+    .swap-body { min-height: 420px; display: flex; align-items: center; justify-content: center; padding: 32px; }
+    .swap-ph { text-align: center; }
+    .swap-ph p { color: var(--text3); font-size: 0.9rem; margin-bottom: 20px; }
+    .chart-body iframe { width: 100%; height: 420px; border: none; }
+    .chart-ph { height: 420px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 32px; }
+    .chart-ph svg { width: 40px; height: 40px; fill: var(--text4); }
+    .chart-ph p { color: var(--text3); font-size: 0.9rem; }
+    @media (max-width: 768px) { .swap-chart-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 480px) { .swap-body { min-height: 320px; padding: 20px; } .chart-body iframe, .chart-ph { height: 320px; } .swap-box-header, .chart-box-header { padding: 12px 16px; font-size: 0.8rem; } }
+
+    /* ═══ CONTRACT ADDRESS ═══ */
+    .ca-card {
+      max-width: 700px;
+      margin: 0 auto;
+      border: 2px solid var(--orange);
+      border-radius: var(--radius-md);
+      padding: 40px;
+      text-align: center;
+      background: var(--orange-bg);
+    }
+    .ca-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--orange);
+      margin-bottom: 16px;
+    }
+    .ca-addr {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .ca-addr:hover { border-color: var(--orange); }
+    .ca-addr span {
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      word-break: break-all;
+      flex: 1;
+      text-align: left;
+      font-weight: 600;
+    }
+    .ca-copy-btn {
+      padding: 8px 20px;
+      border-radius: var(--radius);
+      border: none;
+      background: var(--orange);
+      color: #fff;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .ca-copy-btn:hover { background: var(--orange-dark); }
+    .ca-note { font-size: 0.78rem; color: var(--text3); margin-top: 16px; }
+    @media (max-width: 600px) {
+      .ca-card { padding: 24px 16px; }
+      .ca-addr { flex-direction: column; gap: 10px; padding: 14px; }
+      .ca-addr span { font-size: 0.72rem; text-align: center; }
+      .ca-copy-btn { width: 100%; padding: 10px; }
+    }
+
+    /* ═══ FAQ ═══ */
+    .faq-list { max-width: 700px; margin: 0 auto; }
+    .faq-item { border-bottom: 1px solid var(--border); }
+    .faq-q {
+      width: 100%;
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-align: left;
+      padding: 22px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: color 0.2s;
+    }
+    .faq-q:hover { color: var(--orange); }
+    .faq-arrow { transition: transform 0.3s; flex-shrink: 0; }
+    .faq-arrow svg { width: 20px; height: 20px; fill: var(--text3); }
+    .faq-item.open .faq-arrow { transform: rotate(180deg); }
+    .faq-a { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+    .faq-item.open .faq-a { max-height: 300px; }
+    .faq-a p { padding-bottom: 22px; font-size: 0.9rem; color: var(--text2); line-height: 1.8; }
+
+    /* ═══ FOOTER ═══ */
+    .footer { background: var(--bg-dark); color: #fff; padding: 56px 0 40px; }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 40px; }
+    .footer-brand { font-size: 1.3rem; font-weight: 800; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .footer-brand-logo { width: 28px; height: 28px; background: var(--orange); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .footer-brand-logo svg { width: 14px; height: 14px; fill: #fff; }
+    .footer-desc { font-size: 0.85rem; color: #888; line-height: 1.7; }
+    .footer h4 { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 2px; color: #888; margin-bottom: 16px; font-weight: 700; }
+    .footer-links a { display: block; font-size: 0.88rem; color: #ccc; padding: 5px 0; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--orange); }
+    .footer-bottom { border-top: 1px solid #333; padding-top: 28px; text-align: center; font-size: 0.78rem; color: #666; line-height: 1.7; }
+    @media (max-width: 768px) { .footer-grid { grid-template-columns: 1fr 1fr; gap: 28px; } }
+    @media (max-width: 480px) { .footer-grid { grid-template-columns: 1fr; gap: 24px; } .footer { padding: 40px 0 28px; } .footer-bottom { font-size: 0.72rem; padding-top: 20px; } }
+
+    /* ═══ COOKIE BANNER ═══ */
+    .cookie-banner {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      max-width: 360px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.12);
+      z-index: 9999;
+      font-size: 0.88rem;
+      color: var(--text2);
+      line-height: 1.6;
+      display: none;
+    }
+    .cookie-banner p { margin-bottom: 16px; }
+    .cookie-banner a { color: var(--orange); text-decoration: underline; }
+    .cookie-ok {
+      display: block;
+      width: 100%;
+      padding: 12px 20px;
+      background: var(--orange);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius);
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .cookie-ok:hover { background: var(--orange-dark); }
+    @media (max-width: 600px) {
+      .cookie-banner { left: 12px; right: 12px; bottom: 12px; max-width: none; padding: 20px; }
+    }
+
+    /* ═══ LOGIN MODAL ═══ */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 10000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal {
+      background: #fff;
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 440px;
+      margin: 24px;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.2);
+      overflow: hidden;
+    }
+    .modal-header {
+      padding: 24px 28px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .modal-header h2 { font-size: 1.2rem; font-weight: 800; }
+    .modal-close {
+      width: 36px;
+      height: 36px;
+      border: none;
+      background: var(--bg-alt);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .modal-close:hover { background: var(--border); }
+    .modal-close svg { width: 16px; height: 16px; fill: var(--text3); }
+    .modal-body { padding: 28px; }
+    .modal-desc { font-size: 0.88rem; color: var(--text2); margin-bottom: 28px; line-height: 1.6; }
+    .auth-btn {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      width: 100%;
+      padding: 16px 20px;
+      border-radius: var(--radius-md);
+      font-size: 0.95rem;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      background: #fff;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: 14px;
+    }
+    .auth-btn:last-child { margin-bottom: 0; }
+    .auth-btn:hover { border-color: var(--text4); background: var(--bg-alt); }
+    .auth-btn svg { width: 22px; height: 22px; flex-shrink: 0; }
+    .auth-btn.x-btn svg { fill: #000; }
+    .auth-btn.tg-btn svg { fill: var(--telegram); }
+    .auth-divider {
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--text4);
+      margin: 20px 0;
+      position: relative;
+    }
+    .auth-divider::before, .auth-divider::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      width: calc(50% - 28px);
+      height: 1px;
+      background: var(--border);
+    }
+    .auth-divider::before { left: 0; }
+    .auth-divider::after { right: 0; }
+    .modal-footer {
+      padding: 0 28px 24px;
+      font-size: 0.75rem;
+      color: var(--text4);
+      text-align: center;
+      line-height: 1.6;
+    }
+    .modal-footer a { color: var(--orange); text-decoration: underline; }
+
+    /* ═══ CONNECTED ACCS ═══ */
+    .connected-accs { margin-top: 20px; display: flex; flex-direction: column; gap: 10px; }
+    .acc-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      font-size: 0.85rem;
+    }
+    .acc-row svg { width: 18px; height: 18px; flex-shrink: 0; }
+    .acc-row .acc-name { flex: 1; font-weight: 600; }
+    .acc-row .acc-status { font-size: 0.72rem; font-weight: 700; color: var(--green); letter-spacing: 0.5px; }
+    .acc-row .acc-disconnect {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--red);
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+    .acc-row .acc-disconnect:hover { text-decoration: underline; }
+
+    /* ═══ TRUST BADGES ═══ */
+    .trust-row { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-bottom: 48px; }
+    .trust-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 18px;
+      border-radius: 100px;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+    .trust-badge svg { width: 14px; height: 14px; }
+    .trust-badge.green { background: var(--green-bg); color: var(--green); }
+    .trust-badge.green svg { fill: var(--green); }
+    .trust-badge.orange { background: var(--orange-bg); color: var(--orange); }
+    .trust-badge.orange svg { fill: var(--orange); }
+    @media (max-width: 480px) { .trust-row { gap: 8px; } .trust-badge { font-size: 0.7rem; padding: 6px 12px; } }
+
+    /* ═══ REVEAL ═══ */
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-d1 { transition-delay: 0.05s; }
+    .reveal-d2 { transition-delay: 0.1s; }
+    .reveal-d3 { transition-delay: 0.15s; }
+    .reveal-d4 { transition-delay: 0.2s; }
+
+    /* ═══ MOBILE AUTH WRAPPER ═══ */
+    .mob-auth-wrapper { display: none; }
+  </style>
+</head>
+<body>
+
+  <!-- TOP BANNER -->
+  <div class="top-banner" id="topBanner">
+    Join the WARBIRD community today!<a href="https://t.me" target="_blank">Join Telegram</a>
+  </div>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="container nav-inner">
+      <a href="#" class="nav-brand">
+        <div class="nav-logo"><svg viewBox="0 0 24 24"><path d="M12 2L2 12l3 3 7-7 7 7 3-3L12 2zm0 8l-5 5h3v5h4v-5h3l-5-5z"/></svg></div>
+        warbird
+      </a>
+      <div class="nav-center" id="navCenter">
+        <div class="nav-item" onclick="this.classList.toggle('mob-open')">
+          Introduction
+          <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>
+          <div class="dropdown">
+            <a href="#about">About WARBIRD</a>
+            <a href="#tokenomics">Tokenomics</a>
+            <a href="#buy">How to Buy</a>
+          </div>
+        </div>
+        <div class="nav-item" onclick="this.classList.toggle('mob-open')">
+          Resources
+          <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>
+          <div class="dropdown">
+            <a href="https://dexscreener.com" target="_blank">DexScreener</a>
+            <a href="https://birdeye.so" target="_blank">Birdeye</a>
+            <a href="https://jup.ag" target="_blank">Jupiter</a>
+            <a href="https://raydium.io" target="_blank">Raydium</a>
+          </div>
+        </div>
+        <a class="nav-item" href="#trade">Trade</a>
+        <div class="nav-item" onclick="this.classList.toggle('mob-open')">
+          Community
+          <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>
+          <div class="dropdown">
+            <a href="https://twitter.com" target="_blank">Twitter / X</a>
+            <a href="https://t.me" target="_blank">Telegram</a>
+            <a href="https://discord.com" target="_blank">Discord</a>
+          </div>
+        </div>
+        <a class="nav-item" href="#faq">FAQ</a>
+        <!-- MOBILE AUTH (visible only in mobile slide-out) -->
+        <div class="mob-auth-wrapper" style="display:none;">
+          <button class="nav-auth-btn" id="mobLoginBtn" onclick="openLoginModal()">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            Login
+          </button>
+          <div class="nav-user-pill" id="mobUserPill" style="display:none;">
+            <img id="mobUserAvatar" src="data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect fill='%23f7931a' width='40' height='40' rx='20'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' fill='%23fff' font-size='16' font-weight='bold'%3EW%3C/text%3E%3C/svg%3E" alt="User" />
+            <span id="mobUserName">User</span>
+            <svg viewBox="0 0 24 24" fill="currentColor" style="width:12px;height:12px;fill:#888"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>
+            <div class="user-menu">
+              <a href="#" onclick="openLoginModal(); return false;">Connected Accounts</a>
+              <button onclick="logout()">Logout</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="nav-right">
+        <!-- Logged-out state -->
+        <button class="nav-auth-btn" id="loginBtn" onclick="openLoginModal()">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+          Login
+        </button>
+        <!-- Logged-in state (hidden by default) -->
+        <div class="nav-user-pill" id="userPill" style="display:none;">
+          <img id="userAvatar" src="data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect fill='%23f7931a' width='40' height='40' rx='20'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' fill='%23fff' font-size='16' font-weight='bold'%3EW%3C/text%3E%3C/svg%3E" alt="User" />
+          <span id="userName">User</span>
+          <svg viewBox="0 0 24 24" fill="currentColor" style="width:12px;height:12px;fill:#888"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>
+          <div class="user-menu">
+            <a href="#" onclick="openLoginModal(); return false;">Connected Accounts</a>
+            <button onclick="logout()">Logout</button>
+          </div>
+        </div>
+      </div>
+      <button class="mob-toggle" onclick="document.getElementById('navCenter').classList.toggle('open')">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <h1 class="reveal"><strong>WARBIRD</strong> is an innovative meme token on the Solana network and a new kind of digital asset.</h1>
+      <div class="hero-btns reveal reveal-d1">
+        <a href="#trade" class="btn-primary">
+          <svg viewBox="0 0 24 24"><path d="M17 1l4 4-4 4V6H3V4h14V1zm-10 16v3l-4-4 4-4v3h14v2H7z"/></svg>
+          Get started with WARBIRD
+        </a>
+        <a href="#buy" class="btn-secondary">
+          <svg viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+          Choose your wallet
+        </a>
+      </div>
+      <a href="#about" class="hero-scroll reveal reveal-d2">
+        <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <div class="section" id="about">
+    <div class="container">
+      <div class="stats-bar reveal">
+        <div class="stat-item"><div class="stat-val orange">100M</div><div class="stat-lbl">Total Supply</div></div>
+        <div class="stat-item"><div class="stat-val green">0%</div><div class="stat-lbl">Buy / Sell Tax</div></div>
+        <div class="stat-item"><div class="stat-val orange">Revoked</div><div class="stat-lbl">Mint Authority</div></div>
+        <div class="stat-item"><div class="stat-val">100%</div><div class="stat-lbl">Community</div></div>
+      </div>
+
+      <!-- ABOUT -->
+      <div class="info-grid">
+        <div class="info-text reveal">
+          <h3>What is <span style="color:var(--orange)">WARBIRD</span>?</h3>
+          <p>WARBIRD is a community-driven memecoin on the Solana blockchain. With a fixed supply of 100 million tokens, zero buy/sell tax, and permanently revoked mint authority, WARBIRD represents the next generation of transparent, community-owned tokens.</p>
+          <p>While the world watches the skies, WARBIRD takes flight. No VC, no presale, no insider allocation. Just pure community.</p>
+          <ul class="info-features">
+            <li><span class="check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></span>Fixed supply of 100 million — mint authority permanently revoked</li>
+            <li><span class="check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></span>Zero buy and sell tax — standard SPL token</li>
+            <li><span class="check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></span>Sub-second finality with near-zero transaction fees</li>
+            <li><span class="check"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></span>Fully on-chain, verifiable, and transparent</li>
+          </ul>
+        </div>
+        <div class="info-visual reveal reveal-d1">
+          <canvas id="aboutCanvas" width="400" height="350" style="max-width:100%;"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOKENOMICS -->
+  <section class="section alt" id="tokenomics">
+    <div class="container">
+      <div class="sec-header reveal">
+        <h2>Simple <span class="orange">Tokenomics</span></h2>
+        <p>No hidden allocations. No insider deals. Fair and transparent distribution.</p>
+      </div>
+      <div class="tok-layout reveal">
+        <div class="tok-chart">
+          <div class="donut-wrap">
+            <canvas id="donutCanvas"></canvas>
+            <div class="donut-center">
+              <strong>100M</strong>
+              <span>TOTAL SUPPLY</span>
+            </div>
+          </div>
+        </div>
+        <div class="tok-rows">
+          <div class="tok-row">
+            <div class="tok-dot" style="background:var(--orange)"></div>
+            <div class="tok-info"><div class="tok-name">Liquidity Pool</div><div class="tok-desc">Locked LP, burned for trust</div></div>
+            <div class="tok-pct">90%</div>
+          </div>
+          <div class="tok-row">
+            <div class="tok-dot" style="background:#f59e0b"></div>
+            <div class="tok-info"><div class="tok-name">Marketing</div><div class="tok-desc">Community campaigns, KOLs</div></div>
+            <div class="tok-pct" style="color:#f59e0b">5%</div>
+          </div>
+          <div class="tok-row">
+            <div class="tok-dot" style="background:var(--green)"></div>
+            <div class="tok-info"><div class="tok-name">Team / Dev</div><div class="tok-desc">Development &amp; CEX listings</div></div>
+            <div class="tok-pct" style="color:var(--green)">5%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW TO BUY -->
+  <section class="section" id="buy">
+    <div class="container">
+      <div class="sec-header reveal">
+        <h2>How to <span class="orange">Buy</span></h2>
+        <p>Four simple steps. No experience needed.</p>
+      </div>
+      <div class="steps-grid reveal">
+        <div class="step">
+          <div class="step-num">1</div>
+          <h3>Create a Wallet</h3>
+          <p>Download Phantom or Solflare wallet. Available as browser extension or mobile app.</p>
+          <a href="https://phantom.app/download" target="_blank" class="step-btn">Get Phantom</a>
+          <a href="https://solflare.com/" target="_blank" class="step-btn outline">Solflare</a>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <h3>Get SOL</h3>
+          <p>Buy SOL on Coinbase, Binance, or any exchange. Send it to your wallet address.</p>
+          <a href="https://www.coinbase.com/price/solana" target="_blank" class="step-btn">Coinbase</a>
+          <a href="https://www.binance.com/en/trade/SOL_USDT" target="_blank" class="step-btn outline">Binance</a>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <h3>Connect to DEX</h3>
+          <p>Go to Jupiter or Raydium. Connect your wallet with one click.</p>
+          <a href="https://jup.ag/" target="_blank" class="step-btn">Open Jupiter</a>
+          <a href="https://raydium.io/swap" target="_blank" class="step-btn outline">Raydium</a>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <h3>Swap for WARBIRD</h3>
+          <p>Paste the WARBIRD contract address, set slippage to 1-2%, and confirm the swap.</p>
+          <a href="#" class="step-btn" onclick="copyCA(event)">Copy CA</a>
+          <a href="https://jup.ag/swap/SOL-WARBIRD" target="_blank" class="step-btn outline">Swap Now</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRADE SECTION -->
+  <section class="section alt" id="trade">
+    <div class="container">
+      <div class="sec-header reveal">
+        <h2>Buy <span class="orange">WARBIRD</span></h2>
+        <p>Multiple ways to get in. Pick what works for you.</p>
+      </div>
+
+      <div class="trust-row reveal">
+        <div class="trust-badge green"><svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>Mint Revoked</div>
+        <div class="trust-badge green"><svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM12 17c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>LP Locked</div>
+        <div class="trust-badge green"><svg viewBox="0 0 24 24"><path d="M23 12l-2.44-2.78.34-3.68-3.61-.82-1.89-3.18L12 3 8.6 1.54 6.71 4.72l-3.61.81.34 3.68L1 12l2.44 2.78-.34 3.69 3.61.82 1.89 3.18L12 21l3.4 1.46 1.89-3.18 3.61-.82-.34-3.68L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"/></svg>Zero Tax</div>
+        <div class="trust-badge orange"><svg viewBox="0 0 24 24"><path d="M11 21h-1l1-7H7.5c-.58 0-.57-.32-.38-.66l4.38-7.84c.2-.33.52-.5.88-.5h1l-1 7h3.5c.49 0 .56.33.47.51l-4.48 8C11.68 20.83 11.36 21 11 21z"/></svg>Solana SPL</div>
+      </div>
+
+      <div class="buy-grid">
+        <div class="buy-card reveal reveal-d1">
+          <div class="buy-card-badge hot">BEST RATE</div>
+          <div class="buy-card-icon c-orange"><svg viewBox="0 0 24 24"><path d="M17 1l4 4-4 4V6H3V4h14V1zm-10 16v3l-4-4 4-4v3h14v2H7z"/></svg></div>
+          <h3>Jupiter</h3>
+          <p>Best price aggregator on Solana. Routes through every DEX for lowest slippage.</p>
+          <a href="https://jup.ag/swap/SOL-WARBIRD" target="_blank" class="card-btn primary">Swap on Jupiter</a>
+          <div class="tags"><span class="tag">SOL</span><span class="tag">USDC</span><span class="tag">USDT</span></div>
+        </div>
+        <div class="buy-card reveal reveal-d2">
+          <div class="buy-card-icon c-blue"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div>
+          <h3>Raydium</h3>
+          <p>The leading Solana AMM. Swap directly from the liquidity pool with instant confirmation.</p>
+          <a href="https://raydium.io/swap" target="_blank" class="card-btn outline">Swap on Raydium</a>
+          <div class="tags"><span class="tag">SOL</span><span class="tag">USDC</span></div>
+        </div>
+        <div class="buy-card reveal reveal-d3">
+          <div class="buy-card-badge fiat">FIAT</div>
+          <div class="buy-card-icon c-green"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg></div>
+          <h3>Buy with Card</h3>
+          <p>Buy SOL with Visa, Mastercard, Apple Pay or bank transfer via MoonPay, then swap.</p>
+          <a href="https://www.moonpay.com/buy/sol" target="_blank" class="card-btn outline">Buy SOL with Card</a>
+          <div class="tags"><span class="tag">Visa</span><span class="tag">Mastercard</span><span class="tag">Apple Pay</span></div>
+        </div>
+        <div class="buy-card reveal reveal-d1">
+          <div class="buy-card-icon c-purple"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg></div>
+          <h3>Phantom Wallet</h3>
+          <p>Swap natively inside Phantom. Open the app, tap Swap, paste the WARBIRD address.</p>
+          <a href="https://phantom.app" target="_blank" class="card-btn outline">Get Phantom</a>
+          <div class="tags"><span class="tag">In-App Swap</span><span class="tag">Buy Crypto</span></div>
+        </div>
+        <div class="buy-card reveal reveal-d2">
+          <div class="buy-card-icon c-yellow"><svg viewBox="0 0 24 24"><path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99z"/></svg></div>
+          <h3>DexScreener</h3>
+          <p>Real-time charts, volume, liquidity, and transaction history. Track WARBIRD live.</p>
+          <a href="https://dexscreener.com/solana" target="_blank" class="card-btn outline">View Chart</a>
+          <div class="tags"><span class="tag">Live Price</span><span class="tag">Volume</span><span class="tag">Txns</span></div>
+        </div>
+        <div class="buy-card reveal reveal-d3">
+          <div class="buy-card-icon c-dark"><svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg></div>
+          <h3>Birdeye</h3>
+          <p>Premium analytics. Whale tracking, holder analysis, price alerts. Full visibility.</p>
+          <a href="https://birdeye.so" target="_blank" class="card-btn outline">Open Birdeye</a>
+          <div class="tags"><span class="tag">Analytics</span><span class="tag">Whales</span></div>
+        </div>
+      </div>
+
+      <div class="pay-row reveal">
+        <div class="pay-chip"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg>Visa / Mastercard</div>
+        <div class="pay-chip"><svg viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83z"/></svg>Apple Pay</div>
+        <div class="pay-chip"><svg viewBox="0 0 24 24"><path d="M4 10v7h3v-7H4zm6 0v7h3v-7h-3zM2 22h19v-3H2v3zm14-12v7h3v-7h-3zm-4.5-9L2 6v2h19V6l-9.5-5z"/></svg>Bank Transfer</div>
+        <div class="pay-chip"><svg viewBox="0 0 24 24"><path d="M11 21h-1l1-7H7.5c-.58 0-.57-.32-.38-.66l4.38-7.84c.2-.33.52-.5.88-.5h1l-1 7h3.5c.49 0 .56.33.47.51l-4.48 8C11.68 20.83 11.36 21 11 21z"/></svg>SOL</div>
+        <div class="pay-chip"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.94s4.18 1.36 4.18 3.85c0 1.89-1.44 2.96-3.12 3.19z"/></svg>USDC / USDT</div>
+      </div>
+
+      <!-- SWAP + CHART -->
+      <div class="swap-chart-grid reveal">
+        <div class="swap-box">
+          <div class="swap-box-header">
+            <svg viewBox="0 0 24 24"><path d="M17 1l4 4-4 4V6H3V4h14V1zm-10 16v3l-4-4 4-4v3h14v2H7z"/></svg>
+            Jupiter Swap
+          </div>
+          <div class="swap-body" id="jupiter-terminal">
+            <div class="swap-ph" id="widget-placeholder">
+              <p>Jupiter Terminal loads with wallet connection</p>
+              <a href="https://jup.ag/swap/SOL-WARBIRD" target="_blank" class="btn-primary" style="font-size:0.85rem;padding:12px 28px;">Open Jupiter</a>
+            </div>
+          </div>
+        </div>
+        <div class="chart-box" id="chart-box">
+          <div class="chart-box-header">
+            <svg viewBox="0 0 24 24"><path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99z"/></svg>
+            Live Chart — DexScreener
+          </div>
+          <div class="chart-ph" id="chart-placeholder">
+            <svg viewBox="0 0 24 24"><path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99z"/></svg>
+            <p>Chart loads once the token has trading activity</p>
+            <a href="https://dexscreener.com/solana" target="_blank" class="btn-secondary" style="font-size:0.85rem;padding:10px 24px;">Open DexScreener</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTRACT ADDRESS -->
+  <section class="section">
+    <div class="container reveal">
+      <div class="ca-card">
+        <div class="ca-label">Contract Address — Solana</div>
+        <div class="ca-addr" onclick="copyCA()">
+          <span id="ca">DEPLOY TOKEN FIRST</span>
+          <button class="ca-copy-btn" id="copyBtn">COPY</button>
+        </div>
+        <div class="ca-note">Always verify the contract address via official channels before transacting.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section alt" id="faq">
+    <div class="container">
+      <div class="sec-header reveal">
+        <h2>Frequently Asked <span class="orange">Questions</span></h2>
+      </div>
+      <div class="faq-list reveal">
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">What is WARBIRD?<span class="faq-arrow"><svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg></span></button>
+          <div class="faq-a"><p>WARBIRD is a community-driven meme token on the Solana blockchain. 100 million fixed supply, zero tax, permanently revoked mint authority.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Is there a buy or sell tax?<span class="faq-arrow"><svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg></span></button>
+          <div class="faq-a"><p>No. Absolutely zero tax. Standard SPL token with no custom transfer logic.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Can more tokens be minted?<span class="faq-arrow"><svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg></span></button>
+          <div class="faq-a"><p>No. Mint authority permanently revoked. Supply capped at 100,000,000 WARBIRD forever. On-chain verifiable.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">What wallet do I need?<span class="faq-arrow"><svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg></span></button>
+          <div class="faq-a"><p>Any Solana-compatible wallet. We recommend Phantom (most popular) or Solflare. Both as browser extensions and mobile apps.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">How do I buy without crypto?<span class="faq-arrow"><svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg></span></button>
+          <div class="faq-a"><p>Buy SOL with a credit/debit card via MoonPay or directly inside Phantom wallet, then swap SOL for WARBIRD on Jupiter.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand"><div class="footer-brand-logo"><svg viewBox="0 0 24 24"><path d="M12 2L2 12l3 3 7-7 7 7 3-3L12 2zm0 8l-5 5h3v5h4v-5h3l-5-5z"/></svg></div>warbird</div>
+          <div class="footer-desc">Born from chaos, built for the bold. Community-driven meme token on the Solana network. Zero tax. Fixed supply. No rug.</div>
+        </div>
+        <div>
+          <h4>Navigation</h4>
+          <div class="footer-links">
+            <a href="#about">About</a>
+            <a href="#tokenomics">Tokenomics</a>
+            <a href="#buy">How to Buy</a>
+            <a href="#trade">Trade</a>
+            <a href="#faq">FAQ</a>
+          </div>
+        </div>
+        <div>
+          <h4>Resources</h4>
+          <div class="footer-links">
+            <a href="https://dexscreener.com" target="_blank">DexScreener</a>
+            <a href="https://birdeye.so" target="_blank">Birdeye</a>
+            <a href="https://jup.ag" target="_blank">Jupiter</a>
+            <a href="https://raydium.io" target="_blank">Raydium</a>
+          </div>
+        </div>
+        <div>
+          <h4>Community</h4>
+          <div class="footer-links">
+            <a href="https://twitter.com" target="_blank">Twitter / X</a>
+            <a href="https://t.me" target="_blank">Telegram</a>
+            <a href="https://discord.com" target="_blank">Discord</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">WARBIRD is a meme coin with no intrinsic value or expectation of financial return. This is not financial advice. Always do your own research. &copy; 2026 WARBIRD. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <!-- COOKIE BANNER -->
+  <div class="cookie-banner" id="cookieBanner">
+    <p>We use cookies to ensure you get the best experience on our website. Please read our <a href="#">privacy policy</a> to find out more.</p>
+    <button class="cookie-ok" onclick="acceptCookies()">OK</button>
+  </div>
+
+  <!-- LOGIN MODAL -->
+  <div class="modal-overlay" id="loginModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="modalTitle">Login</h2>
+        <button class="modal-close" onclick="closeLoginModal()">
+          <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-desc" id="modalDesc">Connect your social accounts to join the WARBIRD community. Your accounts will be remembered.</div>
+
+        <!-- Login buttons -->
+        <div id="authButtons">
+          <button class="auth-btn x-btn" onclick="loginWithX()">
+            <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            Continue with X (Twitter)
+          </button>
+          <div class="auth-divider">or</div>
+          <button class="auth-btn tg-btn" onclick="loginWithTelegram()">
+            <svg viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.479.33-.913.492-1.302.48-.428-.012-1.252-.242-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" fill="#0088cc"/></svg>
+            Continue with Telegram
+          </button>
+        </div>
+
+        <!-- Connected accounts (logged-in state) -->
+        <div id="connectedAccounts" style="display:none;">
+          <div class="connected-accs" id="accsList"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        By connecting, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ═══ ABOUT CANVAS ═══ */
+    (function(){
+      const c = document.getElementById('aboutCanvas');
+      if (!c) return;
+      const ctx = c.getContext('2d');
+      const W = c.width, H = c.height;
+      let t = 0;
+      const orange = '#f7931a', green = '#16c784', amber = '#f59e0b';
+      function draw() {
+        t += 0.005;
+        ctx.clearRect(0, 0, W, H);
+        const cx = W / 2, cy = H / 2;
+        for (let r = 0; r < 4; r++) {
+          const rad = 40 + r * 42, dots = 8 + r * 4;
+          ctx.beginPath(); ctx.arc(cx, cy, rad, 0, Math.PI * 2);
+          ctx.strokeStyle = 'rgba(247,147,26,' + (0.08 - r * 0.015) + ')';
+          ctx.lineWidth = 1; ctx.stroke();
+          for (let i = 0; i < dots; i++) {
+            const a = (i / dots) * Math.PI * 2 + t * (1.2 - r * 0.2) * (r % 2 === 0 ? 1 : -1);
+            const px = cx + Math.cos(a) * rad, py = cy + Math.sin(a) * rad;
+            const dr = 2 + Math.sin(t * 4 + i + r) * 1.2;
+            ctx.beginPath(); ctx.arc(px, py, dr, 0, Math.PI * 2);
+            const cols = [orange, amber, green];
+            ctx.fillStyle = cols[r % 3]; ctx.globalAlpha = 0.5 + Math.sin(t * 2 + i) * 0.3;
+            ctx.fill(); ctx.globalAlpha = 1;
+          }
+        }
+        ctx.beginPath(); ctx.arc(cx, cy, 18 + Math.sin(t * 1.5) * 2, 0, Math.PI * 2);
+        const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, 22);
+        g.addColorStop(0, 'rgba(247,147,26,0.6)');
+        g.addColorStop(1, 'rgba(247,147,26,0)');
+        ctx.fillStyle = g; ctx.fill();
+        ctx.beginPath(); ctx.arc(cx, cy, 6, 0, Math.PI * 2);
+        ctx.fillStyle = orange; ctx.fill();
+        ctx.beginPath(); ctx.arc(cx, cy, 3, 0, Math.PI * 2);
+        ctx.fillStyle = '#fff'; ctx.fill();
+        requestAnimationFrame(draw);
+      }
+      draw();
+    })();
+
+    /* ═══ DONUT ═══ */
+    (function(){
+      const c = document.getElementById('donutCanvas');
+      if (!c) return;
+      const ctx = c.getContext('2d');
+      const dpr = devicePixelRatio || 1;
+      const ds = parseInt(getComputedStyle(c).width);
+      c.width = ds * dpr; c.height = ds * dpr; ctx.scale(dpr, dpr);
+      const data = [
+        { p: 0.9, color: '#f7931a' },
+        { p: 0.05, color: '#f59e0b' },
+        { p: 0.05, color: '#16c784' }
+      ];
+      let prog = 0, started = false;
+      const obs = new IntersectionObserver(e => {
+        if (e[0].isIntersecting && !started) { started = true; anim(); }
+      }, { threshold: 0.3 });
+      obs.observe(c);
+      function anim() {
+        prog = Math.min(prog + 0.012, 1);
+        ctx.clearRect(0, 0, ds, ds);
+        let sa = -Math.PI / 2;
+        const ease = 1 - Math.pow(1 - prog, 4);
+        const outerR = ds * 0.44, innerR = ds * 0.28, cx = ds / 2, cy = ds / 2;
+        data.forEach(s => {
+          const sw = s.p * Math.PI * 2 * ease;
+          const gap = 0.03;
+          ctx.beginPath();
+          ctx.arc(cx, cy, outerR, sa + gap, sa + sw - gap);
+          ctx.arc(cx, cy, innerR, sa + sw - gap, sa + gap, true);
+          ctx.closePath();
+          ctx.fillStyle = s.color; ctx.fill();
+          sa += sw;
+        });
+        if (prog < 1) requestAnimationFrame(anim);
+      }
+    })();
+
+    /* ═══ SCROLL REVEAL ═══ */
+    const ro = new IntersectionObserver(e => {
+      e.forEach(el => { if (el.isIntersecting) el.target.classList.add('visible'); });
+    }, { threshold: 0.06, rootMargin: '0px 0px -30px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
+
+    /* ═══ CLOSE MOBILE NAV ON LINK CLICK ═══ */
+    document.querySelectorAll('#navCenter a[href^="#"]').forEach(a => {
+      a.addEventListener('click', () => {
+        document.getElementById('navCenter').classList.remove('open');
+      });
+    });
+
+    /* ═══ FAQ ═══ */
+    function toggleFaq(b) {
+      const i = b.parentElement, o = i.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(x => x.classList.remove('open'));
+      if (!o) i.classList.add('open');
+    }
+
+    /* ═══ COPY CA ═══ */
+    function copyCA(e) {
+      if (e) e.preventDefault();
+      const ca = document.getElementById('ca').textContent;
+      if (ca.startsWith('DEPLOY')) return;
+      navigator.clipboard.writeText(ca);
+      const b = document.getElementById('copyBtn');
+      b.textContent = 'COPIED!';
+      showToast('Contract address copied!');
+      setTimeout(() => b.textContent = 'COPY', 2000);
+    }
+
+    /* ═══ COOKIE BANNER ═══ */
+    (function(){
+      if (!localStorage.getItem('warbird_cookies')) {
+        setTimeout(() => { document.getElementById('cookieBanner').style.display = 'block'; }, 2000);
+      }
+    })();
+    function acceptCookies() {
+      localStorage.setItem('warbird_cookies', '1');
+      document.getElementById('cookieBanner').style.display = 'none';
+    }
+
+    /* ═══ AUTH SYSTEM — X + TELEGRAM ═══ */
+    const STORAGE_KEY = 'warbird_user';
+
+    function getUser() {
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || null; }
+      catch { return null; }
+    }
+
+    function saveUser(user) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(user));
+      updateUI();
+    }
+
+    function openLoginModal() {
+      document.getElementById('loginModal').classList.add('active');
+      const user = getUser();
+      if (user) {
+        document.getElementById('modalTitle').textContent = 'Connected Accounts';
+        document.getElementById('modalDesc').textContent = 'Manage your connected social accounts.';
+        document.getElementById('authButtons').style.display = 'none';
+        document.getElementById('connectedAccounts').style.display = 'block';
+        renderAccounts(user);
+      } else {
+        document.getElementById('modalTitle').textContent = 'Login';
+        document.getElementById('modalDesc').textContent = 'Connect your social accounts to join the WARBIRD community. Your accounts will be remembered.';
+        document.getElementById('authButtons').style.display = 'block';
+        document.getElementById('connectedAccounts').style.display = 'none';
+      }
+    }
+
+    function closeLoginModal() {
+      document.getElementById('loginModal').classList.remove('active');
+    }
+
+    // Close modal on overlay click
+    document.getElementById('loginModal').addEventListener('click', function(e) {
+      if (e.target === this) closeLoginModal();
+    });
+
+    function loginWithX() {
+      // Simulate X (Twitter) OAuth — prompt for handle
+      const handle = prompt('Enter your X (Twitter) username (e.g. @warbird):');
+      if (!handle || !handle.trim()) return;
+      const username = handle.trim().replace(/^@/, '');
+      const user = getUser() || { accounts: {} };
+      user.accounts.x = {
+        username: username,
+        displayName: '@' + username,
+        avatar: null,
+        connectedAt: new Date().toISOString()
+      };
+      if (!user.primaryName) user.primaryName = '@' + username;
+      if (!user.primaryAvatar) user.primaryAvatar = null;
+      saveUser(user);
+      closeLoginModal();
+      showToast('Connected X account: @' + username);
+    }
+
+    function loginWithTelegram() {
+      // Simulate Telegram auth — prompt for handle
+      const handle = prompt('Enter your Telegram username (e.g. @warbird):');
+      if (!handle || !handle.trim()) return;
+      const username = handle.trim().replace(/^@/, '');
+      const user = getUser() || { accounts: {} };
+      user.accounts.telegram = {
+        username: username,
+        displayName: '@' + username,
+        avatar: null,
+        connectedAt: new Date().toISOString()
+      };
+      if (!user.primaryName) user.primaryName = '@' + username;
+      saveUser(user);
+      closeLoginModal();
+      showToast('Connected Telegram account: @' + username);
+    }
+
+    function disconnectAccount(platform) {
+      const user = getUser();
+      if (!user || !user.accounts) return;
+      delete user.accounts[platform];
+      // If no accounts left, remove user entirely
+      if (Object.keys(user.accounts).length === 0) {
+        localStorage.removeItem(STORAGE_KEY);
+        updateUI();
+        closeLoginModal();
+        return;
+      }
+      // Update primary name if needed
+      const remaining = Object.values(user.accounts)[0];
+      user.primaryName = remaining.displayName;
+      saveUser(user);
+      renderAccounts(user);
+    }
+
+    function renderAccounts(user) {
+      const list = document.getElementById('accsList');
+      let html = '';
+      if (user.accounts.x) {
+        html += `<div class="acc-row">
+          <svg viewBox="0 0 24 24" fill="#000"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          <span class="acc-name">${user.accounts.x.displayName}</span>
+          <span class="acc-status">CONNECTED</span>
+          <button class="acc-disconnect" onclick="disconnectAccount('x')">Disconnect</button>
+        </div>`;
+      }
+      if (user.accounts.telegram) {
+        html += `<div class="acc-row">
+          <svg viewBox="0 0 24 24" fill="#0088cc"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.479.33-.913.492-1.302.48-.428-.012-1.252-.242-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+          <span class="acc-name">${user.accounts.telegram.displayName}</span>
+          <span class="acc-status">CONNECTED</span>
+          <button class="acc-disconnect" onclick="disconnectAccount('telegram')">Disconnect</button>
+        </div>`;
+      }
+      // Show option to connect missing accounts
+      if (!user.accounts.x) {
+        html += `<button class="auth-btn x-btn" onclick="loginWithX()" style="margin-top:8px;">
+          <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          Connect X (Twitter)
+        </button>`;
+      }
+      if (!user.accounts.telegram) {
+        html += `<button class="auth-btn tg-btn" onclick="loginWithTelegram()" style="margin-top:8px;">
+          <svg viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.479.33-.913.492-1.302.48-.428-.012-1.252-.242-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" fill="#0088cc"/></svg>
+          Connect Telegram
+        </button>`;
+      }
+      list.innerHTML = html;
+    }
+
+    function logout() {
+      localStorage.removeItem(STORAGE_KEY);
+      updateUI();
+      closeLoginModal();
+      showToast('Logged out successfully');
+    }
+
+    function updateUI() {
+      const user = getUser();
+      const loginBtn = document.getElementById('loginBtn');
+      const userPill = document.getElementById('userPill');
+      const mobLoginBtn = document.getElementById('mobLoginBtn');
+      const mobUserPill = document.getElementById('mobUserPill');
+      if (user && user.accounts && Object.keys(user.accounts).length > 0) {
+        loginBtn.style.display = 'none';
+        userPill.style.display = 'flex';
+        if (mobLoginBtn) mobLoginBtn.style.display = 'none';
+        if (mobUserPill) mobUserPill.style.display = 'flex';
+        document.getElementById('userName').textContent = user.primaryName || 'User';
+        if (document.getElementById('mobUserName')) document.getElementById('mobUserName').textContent = user.primaryName || 'User';
+        // Generate avatar
+        const name = user.primaryName || 'U';
+        const letter = name.replace('@', '').charAt(0).toUpperCase();
+        const avatarSrc = `data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect fill='%23f7931a' width='40' height='40' rx='20'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' fill='%23fff' font-size='16' font-weight='bold'%3E${letter}%3C/text%3E%3C/svg%3E`;
+        document.getElementById('userAvatar').src = avatarSrc;
+        if (document.getElementById('mobUserAvatar')) document.getElementById('mobUserAvatar').src = avatarSrc;
+      } else {
+        loginBtn.style.display = 'flex';
+        userPill.style.display = 'none';
+        if (mobLoginBtn) mobLoginBtn.style.display = 'flex';
+        if (mobUserPill) mobUserPill.style.display = 'none';
+      }
+    }
+
+    // Simple toast notification
+    function showToast(msg) {
+      const t = document.createElement('div');
+      t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1d1d1d;color:#fff;padding:14px 28px;border-radius:8px;font-size:0.88rem;font-weight:600;z-index:99999;box-shadow:0 8px 30px rgba(0,0,0,0.2);opacity:0;transition:opacity 0.3s;max-width:90vw;text-align:center;';
+      t.textContent = msg;
+      document.body.appendChild(t);
+      requestAnimationFrame(() => t.style.opacity = '1');
+      setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 3000);
+    }
+
+    // Init auth state on load
+    updateUI();
+
+    /* ═══ LOAD TOKEN INFO ═══ */
+    fetch('token-info.json').then(r => r.ok ? r.json() : null).then(info => {
+      if (!info?.mint) return;
+      const mint = info.mint;
+      document.getElementById('ca').textContent = mint;
+      document.querySelectorAll('a[href*="jup.ag/swap/SOL-WARBIRD"]').forEach(a => { a.href = `https://jup.ag/swap/SOL-${mint}`; });
+      document.querySelectorAll('a[href="https://dexscreener.com/solana"]').forEach(a => { a.href = `https://dexscreener.com/solana/${mint}`; });
+      document.querySelectorAll('a[href="https://birdeye.so"]').forEach(a => { a.href = `https://birdeye.so/token/${mint}?chain=solana`; });
+      const cb = document.getElementById('chart-box'), cp = document.getElementById('chart-placeholder');
+      if (cb && cp) {
+        const f = document.createElement('iframe');
+        f.src = `https://dexscreener.com/solana/${mint}?embed=1&theme=dark`;
+        f.className = 'chart-body';
+        f.style.cssText = 'width:100%;height:420px;border:none;';
+        cp.replaceWith(f);
+      }
+    }).catch(() => {});
+
+    /* ═══ JUPITER TERMINAL ═══ */
+    (function(){
+      const s = document.createElement('script');
+      s.src = 'https://terminal.jup.ag/main-v3.js';
+      s.onload = () => {
+        if (!window.Jupiter) return;
+        fetch('token-info.json').then(r => r.ok ? r.json() : null).then(info => {
+          const mint = info?.mint || 'So11111111111111111111111111111111';
+          const ph = document.getElementById('widget-placeholder');
+          if (ph) ph.style.display = 'none';
+          try {
+            window.Jupiter.init({
+              displayMode: 'integrated',
+              integratedTargetId: 'jupiter-terminal',
+              endpoint: 'https://api.mainnet-beta.solana.com',
+              formProps: { initialOutputMint: mint, fixedOutputMint: false }
+            });
+          } catch (e) { if (ph) ph.style.display = 'block'; }
+        });
+      };
+      s.onerror = () => {};
+      document.head.appendChild(s);
+    })();
+  </script>
+</body>
+</html>
