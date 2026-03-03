@@ -142,6 +142,17 @@ public class TwitterAuthController : ControllerBase
         try
         {
             var client = _httpFactory.CreateClient();
+            var clientSecret = _config["Twitter:ClientSecret"];
+
+            // Use Basic auth (confidential client) if client secret is available
+            if (!string.IsNullOrEmpty(clientSecret) && !clientSecret.StartsWith("YOUR_"))
+            {
+                var credentials = Convert.ToBase64String(
+                    Encoding.UTF8.GetBytes($"{Uri.EscapeDataString(clientId)}:{Uri.EscapeDataString(clientSecret)}"));
+                client.DefaultRequestHeaders.Authorization =
+                    new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", credentials);
+            }
+
             var body = new FormUrlEncodedContent(new Dictionary<string, string>
             {
                 ["grant_type"] = "authorization_code",
@@ -152,7 +163,12 @@ public class TwitterAuthController : ControllerBase
             });
 
             var response = await client.PostAsync("https://api.twitter.com/2/oauth2/token", body);
-            if (!response.IsSuccessStatusCode) return null;
+            if (!response.IsSuccessStatusCode)
+            {
+                var err = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"[Twitter OAuth] Token exchange failed: {response.StatusCode} — {err}");
+                return null;
+            }
 
             var json = await response.Content.ReadAsStringAsync();
             var result = JsonSerializer.Deserialize<TwitterTokenResponse>(json, new JsonSerializerOptions
@@ -161,8 +177,9 @@ public class TwitterAuthController : ControllerBase
             });
             return result;
         }
-        catch
+        catch (Exception ex)
         {
+            Console.WriteLine($"[Twitter OAuth] Exception: {ex.Message}");
             return null;
         }
     }

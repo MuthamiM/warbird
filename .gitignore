@@ -13,3 +13,4 @@ airdrop-report-*.json
 warbird.db
 warbird.db-shm
 warbird.db-wal
+appsettings.Development.json
