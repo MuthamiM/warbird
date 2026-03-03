@@ -1,0 +1,26 @@
+{
+  "name": "warbird-token",
+  "version": "1.0.0",
+  "description": "$WARBIRD - Meme coin on Solana",
+  "scripts": {
+    "generate-wallet": "node scripts/generate-wallet.js",
+    "airdrop": "node scripts/airdrop.js",
+    "create-token": "node scripts/create-token.js",
+    "create-token:devnet": "node -e \"process.env.SOLANA_CLUSTER='devnet'\" && node scripts/create-token.js",
+    "create-token:mainnet": "node -e \"process.env.SOLANA_CLUSTER='mainnet-beta'\" && node scripts/create-token.js",
+    "upload-metadata": "node scripts/upload-metadata.js",
+    "dev": "npx live-server site --port=3000"
+  },
+  "dependencies": {
+    "@metaplex-foundation/mpl-token-metadata": "^3.4.0",
+    "@metaplex-foundation/umi": "^1.5.1",
+    "@metaplex-foundation/umi-bundle-defaults": "^1.5.1",
+    "@metaplex-foundation/umi-uploader-irys": "^1.5.0",
+    "@solana/spl-token": "^0.4.9",
+    "@solana/web3.js": "^1.95.0",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  }
+}

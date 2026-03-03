@@ -1,0 +1,25 @@
+{
+  "name": "WarBird",
+  "symbol": "WARBIRD",
+  "description": "$WARBIRD — The meme coin that flies where others fear to tread. Born from chaos, built for the bold. No promises, no roadmap, just pure degen energy. 🦅🔥",
+  "image": "",
+  "external_url": "",
+  "attributes": [
+    {
+      "trait_type": "Category",
+      "value": "Meme Coin"
+    },
+    {
+      "trait_type": "Chain",
+      "value": "Solana"
+    },
+    {
+      "trait_type": "Total Supply",
+      "value": "100,000,000"
+    }
+  ],
+  "properties": {
+    "files": [],
+    "category": "currency"
+  }
+}
