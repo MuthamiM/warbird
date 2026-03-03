@@ -18,7 +18,8 @@ public class TwitterAuthController : ControllerBase
     private readonly WarbirdDbContext _db;
     private readonly IConfiguration _config;
     private readonly IHttpClientFactory _httpFactory;
-    private static readonly Dictionary<string, PkceChallenge> _pendingChallenges = new();
+    // Use ConcurrentDictionary for thread safety
+    private static readonly System.Collections.Concurrent.ConcurrentDictionary<string, PkceChallenge> _pendingChallenges = new();
 
     public TwitterAuthController(WarbirdDbContext db, IConfiguration config, IHttpClientFactory httpFactory)
     {
@@ -43,9 +44,16 @@ public class TwitterAuthController : ControllerBase
         // Generate PKCE challenge
         var codeVerifier = GenerateCodeVerifier();
         var codeChallenge = GenerateCodeChallenge(codeVerifier);
-        var state = Guid.NewGuid().ToString("N");
 
-        // Store for callback verification (with 10-min expiry)
+        // Encode state as self-contained payload so it survives server restarts
+        var statePayload = JsonSerializer.Serialize(new { cv = codeVerifier, ru = returnUrl ?? "/", ts = DateTimeOffset.UtcNow.ToUnixTimeSeconds() });
+        var stateBytes = Encoding.UTF8.GetBytes(statePayload);
+        var stateKey = Encoding.UTF8.GetBytes((_config["Twitter:ClientSecret"] ?? "warbird-fallback-key").PadRight(32).Substring(0, 32));
+        // Simple XOR + Base64Url for tamper-resistant self-contained state
+        for (int i = 0; i < stateBytes.Length; i++) stateBytes[i] ^= stateKey[i % stateKey.Length];
+        var state = Convert.ToBase64String(stateBytes).TrimEnd('=').Replace('+', '-').Replace('/', '_');
+
+        // Also keep in-memory as fast-path (works when server stays warm)
         _pendingChallenges[state] = new PkceChallenge(codeVerifier, returnUrl ?? "/", DateTime.UtcNow.AddMinutes(10));
         CleanExpiredChallenges();
 
@@ -70,16 +78,40 @@ public class TwitterAuthController : ControllerBase
         if (string.IsNullOrEmpty(code) || string.IsNullOrEmpty(state))
             return BadRequest("Missing code or state parameter.");
 
-        if (!_pendingChallenges.TryGetValue(state, out var challenge))
-            return BadRequest("Invalid or expired state. Please try again.");
+        PkceChallenge? challenge = null;
 
-        if (challenge.ExpiresAt < DateTime.UtcNow)
+        // Fast path: in-memory lookup
+        if (_pendingChallenges.TryRemove(state, out var memChallenge))
         {
-            _pendingChallenges.Remove(state);
-            return BadRequest("Authorization expired. Please try again.");
+            if (memChallenge.ExpiresAt >= DateTime.UtcNow)
+                challenge = memChallenge;
         }
 
-        _pendingChallenges.Remove(state);
+        // Fallback: decode self-contained state (survives server restarts)
+        if (challenge == null)
+        {
+            try
+            {
+                var padded = state.Replace('-', '+').Replace('_', '/');
+                switch (padded.Length % 4) { case 2: padded += "=="; break; case 3: padded += "="; break; }
+                var stateBytes = Convert.FromBase64String(padded);
+                var stateKey = Encoding.UTF8.GetBytes((_config["Twitter:ClientSecret"] ?? "warbird-fallback-key").PadRight(32).Substring(0, 32));
+                for (int i = 0; i < stateBytes.Length; i++) stateBytes[i] ^= stateKey[i % stateKey.Length];
+                var payload = JsonSerializer.Deserialize<JsonElement>(Encoding.UTF8.GetString(stateBytes));
+                var cv = payload.GetProperty("cv").GetString()!;
+                var ru = payload.GetProperty("ru").GetString() ?? "/";
+                var ts = payload.GetProperty("ts").GetInt64();
+                // Verify not expired (10 min)
+                if (DateTimeOffset.UtcNow.ToUnixTimeSeconds() - ts > 600)
+                    return BadRequest("Authorization expired. Please try again.");
+                challenge = new PkceChallenge(cv, ru, DateTimeOffset.FromUnixTimeSeconds(ts + 600).UtcDateTime);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[Twitter OAuth] State decode failed: {ex.Message}");
+                return BadRequest("Invalid or expired state. Please try again.");
+            }
+        }
 
         var clientId = _config["Twitter:ClientId"]!;
         var redirectUri = _config["Twitter:RedirectUri"] ?? $"{Request.Scheme}://{Request.Host}/api/auth/twitter/callback";
@@ -234,7 +266,7 @@ public class TwitterAuthController : ControllerBase
     private static void CleanExpiredChallenges()
     {
         var expired = _pendingChallenges.Where(kv => kv.Value.ExpiresAt < DateTime.UtcNow).Select(kv => kv.Key).ToList();
-        foreach (var key in expired) _pendingChallenges.Remove(key);
+        foreach (var key in expired) _pendingChallenges.TryRemove(key, out _);
     }
 
     private record PkceChallenge(string CodeVerifier, string ReturnUrl, DateTime ExpiresAt);

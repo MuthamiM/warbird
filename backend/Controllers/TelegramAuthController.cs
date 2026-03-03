@@ -34,7 +34,11 @@ public class TelegramAuthController : ControllerBase
         if (string.IsNullOrEmpty(botUsername))
             return BadRequest(new ApiResponse(false, "Telegram Bot not configured. Set Telegram:BotUsername in appsettings.json"));
 
-        return Ok(new { botUsername });
+        // Extract numeric bot ID from the token (format: "BOTID:SECRET")
+        var botToken = _config["Telegram:BotToken"] ?? "";
+        var botId = botToken.Contains(':') ? botToken.Split(':')[0] : "";
+
+        return Ok(new { botUsername, botId });
     }
 
     /// <summary>
