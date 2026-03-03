@@ -78,4 +78,24 @@ app.UseCors("AllowFrontend");
 app.UseRateLimiter();
 app.MapControllers();
 
+// ═══ ROOT WELCOME ═══
+app.MapGet("/", () => Results.Json(new
+{
+    name = "WARBIRD API",
+    version = "1.0.0",
+    endpoints = new
+    {
+        health = "GET /api/health",
+        register = "POST /api/auth/register",
+        login = "POST /api/auth/login",
+        profile = "GET /api/auth/{userId}",
+        connectSocial = "POST /api/auth/{userId}/connect-social",
+        connectWallet = "POST /api/auth/{userId}/connect-wallet",
+        contact = "POST /api/community/contact",
+        subscribe = "POST /api/community/subscribe",
+        unsubscribe = "DELETE /api/community/unsubscribe",
+        stats = "GET /api/community/stats"
+    }
+}));
+
 app.Run();
