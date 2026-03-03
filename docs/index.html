@@ -3,6 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Security Headers -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://terminal.jup.ag; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; frame-src https://dexscreener.com https://terminal.jup.ag; connect-src 'self' https://api.mainnet-beta.solana.com https://terminal.jup.ag https://localhost:5001 https://*.azurewebsites.net;" />
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta http-equiv="X-Frame-Options" content="DENY" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=()" />
   <title>WARBIRD — Innovative Meme Token on Solana</title>
   <meta name="description" content="WARBIRD is an innovative meme token on the Solana network. Zero tax. Fixed supply. Community driven." />
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
@@ -1818,9 +1824,30 @@
 
     /* ═══ AUTH SYSTEM — X + TELEGRAM ═══ */
     const STORAGE_KEY = 'warbird_user';
+    const USERNAME_RE = /^[a-zA-Z0-9_]{1,30}$/;
+
+    function escapeHtml(str) {
+      const d = document.createElement('div');
+      d.textContent = str;
+      return d.innerHTML;
+    }
+
+    function sanitizeUsername(raw) {
+      if (!raw || !raw.trim()) return null;
+      const clean = raw.trim().replace(/^@/, '').replace(/[^a-zA-Z0-9_]/g, '');
+      if (!clean || clean.length > 30) return null;
+      return clean;
+    }
 
     function getUser() {
-      try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || null; }
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return null;
+        const user = JSON.parse(raw);
+        // Validate structure to prevent tampered data
+        if (!user || typeof user !== 'object' || !user.accounts || typeof user.accounts !== 'object') return null;
+        return user;
+      }
       catch { return null; }
     }
 
@@ -1863,8 +1890,8 @@
       }
       // Simulate X (Twitter) OAuth — prompt for handle
       const handle = prompt('Enter your X (Twitter) username (e.g. @warbird):');
-      if (!handle || !handle.trim()) return;
-      const username = handle.trim().replace(/^@/, '');
+      const username = sanitizeUsername(handle);
+      if (!username) { if (handle) showToast('Invalid username — letters, numbers, underscores only (max 30 chars)'); return; }
       const user = getUser() || { accounts: {} };
       user.accounts.x = {
         username: username,
@@ -1876,7 +1903,7 @@
       if (!user.primaryAvatar) user.primaryAvatar = null;
       saveUser(user);
       closeLoginModal();
-      showToast('Connected X account: @' + username);
+      showToast('Connected X account: @' + escapeHtml(username));
     }
 
     function loginWithTelegram() {
@@ -1887,8 +1914,8 @@
       }
       // Simulate Telegram auth — prompt for handle
       const handle = prompt('Enter your Telegram username (e.g. @warbird):');
-      if (!handle || !handle.trim()) return;
-      const username = handle.trim().replace(/^@/, '');
+      const username = sanitizeUsername(handle);
+      if (!username) { if (handle) showToast('Invalid username — letters, numbers, underscores only (max 30 chars)'); return; }
       const user = getUser() || { accounts: {} };
       user.accounts.telegram = {
         username: username,
@@ -1899,7 +1926,7 @@
       if (!user.primaryName) user.primaryName = '@' + username;
       saveUser(user);
       closeLoginModal();
-      showToast('Connected Telegram account: @' + username);
+      showToast('Connected Telegram account: @' + escapeHtml(username));
     }
 
     function disconnectAccount(platform) {
@@ -1924,17 +1951,19 @@
       const list = document.getElementById('accsList');
       let html = '';
       if (user.accounts.x) {
+        const dn = escapeHtml(user.accounts.x.displayName);
         html += `<div class="acc-row">
           <svg viewBox="0 0 24 24" fill="#000"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-          <span class="acc-name">${user.accounts.x.displayName}</span>
+          <span class="acc-name">${dn}</span>
           <span class="acc-status">CONNECTED</span>
           <button class="acc-disconnect" onclick="disconnectAccount('x')">Disconnect</button>
         </div>`;
       }
       if (user.accounts.telegram) {
+        const dn = escapeHtml(user.accounts.telegram.displayName);
         html += `<div class="acc-row">
           <svg viewBox="0 0 24 24" fill="#0088cc"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.479.33-.913.492-1.302.48-.428-.012-1.252-.242-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
-          <span class="acc-name">${user.accounts.telegram.displayName}</span>
+          <span class="acc-name">${dn}</span>
           <span class="acc-status">CONNECTED</span>
           <button class="acc-disconnect" onclick="disconnectAccount('telegram')">Disconnect</button>
         </div>`;
