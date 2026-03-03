@@ -15,6 +15,7 @@
     "vesting:setup": "node scripts/vesting.js setup",
     "vesting:release": "node scripts/vesting.js release",
     "create-lp": "node scripts/create-lp.js",
+    "revoke-freeze": "node scripts/revoke-freeze.js",
     "pre-check": "node scripts/pre-listing-check.js",
     "dev": "npx live-server site --port=3000"
   },
