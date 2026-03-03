@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WARBIRD — API Documentation</title>
+  <meta name="description" content="WARBIRD public REST API documentation. Explore authentication, community, and health endpoints." />
+  <meta name="robots" content="noindex" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦅</text></svg>" />
+  <style>
+    :root { --bg: #0a0a0a; --surface: #111; --border: #222; --text: #e0e0e0; --muted: #888; --orange: #f7931a; --green: #22c55e; --blue: #3b82f6; --red: #ef4444; --purple: #a855f7; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+    a { color: var(--orange); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .top-bar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 16px 0; position: sticky; top: 0; z-index: 100; }
+    .top-bar .container { display: flex; align-items: center; justify-content: space-between; }
+    .top-bar .brand { font-weight: 800; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; color: #fff; }
+    .top-bar .brand span { color: var(--muted); font-weight: 400; font-size: 0.85rem; }
+    .back-link { font-size: 0.85rem; color: var(--muted); transition: color 0.2s; }
+    .back-link:hover { color: var(--orange); text-decoration: none; }
+
+    .container { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+
+    .hero { padding: 48px 0 32px; border-bottom: 1px solid var(--border); }
+    .hero h1 { font-size: 2rem; font-weight: 800; margin-bottom: 8px; }
+    .hero p { color: var(--muted); font-size: 0.95rem; max-width: 600px; }
+    .base-url { margin-top: 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.88rem; display: flex; align-items: center; gap: 10px; }
+    .base-url .label { color: var(--muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; }
+    .base-url code { color: var(--orange); }
+
+    .section { padding: 40px 0 0; }
+    .section h2 { font-size: 1.3rem; font-weight: 700; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+
+    .endpoint { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 16px; overflow: hidden; }
+    .endpoint-header { display: flex; align-items: center; gap: 12px; padding: 14px 18px; cursor: pointer; user-select: none; }
+    .endpoint-header:hover { background: rgba(255,255,255,0.02); }
+    .method { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.75rem; font-weight: 700; padding: 3px 10px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .method-get { background: rgba(34,197,94,0.15); color: var(--green); }
+    .method-post { background: rgba(59,130,246,0.15); color: var(--blue); }
+    .method-delete { background: rgba(239,68,68,0.15); color: var(--red); }
+    .endpoint-path { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.88rem; color: #fff; }
+    .endpoint-desc { font-size: 0.82rem; color: var(--muted); margin-left: auto; }
+    .endpoint-body { padding: 0 18px 16px; display: none; }
+    .endpoint.open .endpoint-body { display: block; }
+    .endpoint-body p { font-size: 0.88rem; color: var(--muted); margin-bottom: 12px; }
+    .endpoint-body h4 { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); margin: 16px 0 8px; }
+
+    .params-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    .params-table th { text-align: left; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); padding: 6px 0; border-bottom: 1px solid var(--border); }
+    .params-table td { padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: top; }
+    .params-table td:first-child { font-family: 'SF Mono', 'Fira Code', monospace; color: var(--orange); width: 30%; }
+    .type-tag { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.75rem; color: var(--purple); }
+    .required-tag { font-size: 0.68rem; background: rgba(239,68,68,0.15); color: var(--red); padding: 1px 6px; border-radius: 3px; margin-left: 6px; }
+
+    pre { background: #0d0d0d; border: 1px solid var(--border); border-radius: 6px; padding: 14px 16px; overflow-x: auto; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.82rem; line-height: 1.6; color: var(--muted); }
+    pre .key { color: var(--blue); }
+    pre .str { color: var(--green); }
+    pre .num { color: var(--orange); }
+
+    .status-codes { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px; }
+    .status-code { font-size: 0.78rem; padding: 3px 10px; border-radius: 4px; font-family: 'SF Mono', 'Fira Code', monospace; }
+    .status-2xx { background: rgba(34,197,94,0.12); color: var(--green); }
+    .status-4xx { background: rgba(239,68,68,0.12); color: var(--red); }
+    .status-5xx { background: rgba(168,85,247,0.12); color: var(--purple); }
+
+    .note { background: rgba(247,147,26,0.08); border-left: 3px solid var(--orange); padding: 12px 16px; border-radius: 0 6px 6px 0; font-size: 0.85rem; color: var(--muted); margin: 20px 0; }
+    .note strong { color: var(--orange); }
+
+    .footer { margin-top: 60px; padding: 24px 0; border-top: 1px solid var(--border); text-align: center; font-size: 0.78rem; color: var(--muted); }
+
+    @media (max-width: 600px) {
+      .hero h1 { font-size: 1.5rem; }
+      .endpoint-header { flex-wrap: wrap; gap: 8px; }
+      .endpoint-desc { margin-left: 0; width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <div class="container">
+      <div class="brand">🦅 WARBIRD <span>API Docs</span></div>
+      <a href="index.html" class="back-link">← Back to Site</a>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="hero">
+      <h1>API Documentation</h1>
+      <p>Public REST API for the WARBIRD ecosystem. Handles authentication, social connections, community features, and more.</p>
+      <div class="base-url">
+        <span class="label">Base URL</span>
+        <code>https://warbird-api.azurewebsites.net</code>
+      </div>
+    </div>
+
+    <div class="note">
+      <strong>Rate Limiting:</strong> All endpoints are rate-limited. Excessive requests will receive a <code>429 Too Many Requests</code> response.
+    </div>
+
+    <!-- HEALTH -->
+    <div class="section">
+      <h2>Health</h2>
+
+      <div class="endpoint">
+        <div class="endpoint-header" onclick="this.parentElement.classList.toggle('open')">
+          <span class="method method-get">GET</span>
+          <span class="endpoint-path">/api/health</span>
+          <span class="endpoint-desc">Check API status</span>
+        </div>
+        <div class="endpoint-body">
+          <p>Returns the current health status of the API and database connectivity.</p>
+          <h4>Response</h4>
+<pre>{
+  <span class="key">"status"</span>: <span class="str">"healthy"</span>,
+  <span class="key">"timestamp"</span>: <span class="str">"2026-03-03T12:00:00Z"</span>,
+  <span class="key">"database"</span>: <span class="str">"connected"</span>,
+  <span class="key">"users"</span>: <span class="num">42</span>
+}</pre>
+          <h4>Status Codes</h4>
+          <div class="status-codes">
+            <span class="status-code status-2xx">200 OK</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AUTHENTICATION -->
+    <div class="section">
+      <h2>Authentication</h2>
+
+      <div class="endpoint">
+        <div class="endpoint-header" onclick="this.parentElement.classList.toggle('open')">
+          <span class="method method-post">POST</span>
+          <span class="endpoint-path">/api/auth/register</span>
+          <span class="endpoint-desc">Create a new account</span>
+        </div>
+        <div class="endpoint-body">
+          <p>Register a new user with username and password.</p>
+          <h4>Request Body</h4>
+          <table class="params-table">
+            <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+            <tr><td>username</td><td><span class="type-tag">string</span><span class="required-tag">required</span></td><td>Unique username (3-30 chars)</td></tr>
+            <tr><td>password</td><td><span class="type-tag">string</span><span class="required-tag">required</span></td><td>Password (min 6 chars)</td></tr>
+          </table>
+          <h4>Response</h4>
+<pre>{
+  <span class="key">"id"</span>: <span class="num">1</span>,
+  <span class="key">"username"</span>: <span class="str">"warbird_fan"</span>,
+  <span class="key">"createdAt"</span>: <span class="str">"2026-03-03T12:00:00Z"</span>
+}</pre>
+          <h4>Status Codes</h4>
+          <div class="status-codes">
+            <span class="status-code status-2xx">201 Created</span>
+            <span class="status-code status-4xx">400 Bad Request</span>
+            <span class="status-code status-4xx">409 Conflict</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="endpoint">
+        <div class="endpoint-header" onclick="this.parentElement.classList.toggle('open')">
+          <span class="method method-post">POST</span>
+          <span class="endpoint-path">/api/auth/login</span>
+          <span class="endpoint-desc">Log in</span>
+        </div>
+        <div class="endpoint-body">
+          <p>Authenticate with username and password.</p>
+          <h4>Request Body</h4>
+          <table class="params-table">
+            <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+            <tr><td>username</td><td><span class="type-tag">string</span><span class="required-tag">required</span></td><td>Your username</td></tr>
+            <tr><td>password</td><td><span class="type-tag">string</span><span class="required-tag">required</span></td><td>Your password</td></tr>
+          </table>
+          <h4>Response</h4>
+<pre>{
+  <span class="key">"id"</span>: <span class="num">1</span>,
+  <span class="key">"username"</span>: <span class="str">"warbird_fan"</span>,
+  <span class="key">"twitter"</span>: <span class="str">null</span>,
+  <span class="key">"telegram"</span>: <span class="str">null</span>
+}</pre>
+          <h4>Status Codes</h4>
+          <div class="status-codes">
+            <span class="status-code status-2xx">200 OK</span>
+            <span class="status-code status-4xx">401 Unauthorized</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="endpoint">
+        <div class="endpoint-header" onclick="this.parentElement.classList.toggle('open')">
+          <span class="method method-get">GET</span>
+          <span class="endpoint-path">/api/auth/{userId}</span>
+          <span class="endpoint-desc">Get user profile</span>
+        </div>
+        <div class="endpoint-body">
+          <p>Retrieve the profile of a specific user by their ID.</p>
+          <h4>Path Parameters</h4>
+          <table class="params-table">
+            <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+            <tr><td>userId</td><td><span class="type-tag">integer</span><span class="required-tag">required</span></td><td>The user's numeric ID</td></tr>
+          </table>
+          <h4>Status Codes</h4>
+          <div class="status-codes">
+            <span class="status-code status-2xx">200 OK</span>
+            <span class="status-code status-4xx">404 Not Found</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TWITTER OAUTH -->
+    <div class="section">
+      <h2>Twitter / X OAuth</h2>
+
+      <div class="endpoint">
+        <div class="endpoint-header" onclick="this.parentElement.classList.toggle('open')">
+          <span class="method method-get">GET</span>
+          <span class="endpoint-path">/api/auth/twitter/authorize</span>
+          <span class="endpoint-desc">Start Twitter login</span>
+        </div>
+        <div class="endpoint-body">
+          <p>Initiates the Twitter OAuth 2.0 PKCE flow. Returns a URL the client should redirect to.</p>
+          <h4>Response</h4>
+<pre>{
+  <span class="key">"authUrl"</span>: <span class="str">"https://twitter.com/i/oauth2/authorize?..."</span>,
+  <span class="key">"state"</span>: <span class="str">"random_state_string"</span>
+}</pre>
+          <h4>Status Codes</h4>
+          <div class="status-codes">
+            <span class="status-code status-2xx">200 OK</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="endpoint">
+        <div class="endpoint-header" onclick="this.parentElement.classList.toggle('open')">
+          <span class="method method-get">GET</span>
+          <span class="endpoint-path">/api/auth/twitter/callback</span>
+          <span class="endpoint-desc">Twitter OAuth callback</span>
+        </div>
+        <div class="endpoint-body">
+          <p>Handles the callback from Twitter after user authorization. Exchanges the code for an access token, fetches user info, and redirects back to the frontend with user data.</p>
+          <h4>Query Parameters</h4>
+          <table class="params-table">
+            <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+            <tr><td>code</td><td><span class="type-tag">string</span><span class="required-tag">required</span></td><td>Authorization code from Twitter</td></tr>
+            <tr><td>state</td><td><span class="type-tag">string</span><span class="required-tag">required</span></td><td>State parameter for CSRF verification</td></tr>
+          </table>
+          <h4>Status Codes</h4>
+          <div class="status-codes">
+            <span class="status-code status-2xx">302 Redirect</span>
+            <span class="status-code status-4xx">400 Bad Request</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TELEGRAM -->
+    <div class="section">
+      <h2>Telegram</h2>
+
+      <div class="endpoint">
+        <div class="endpoint-header" onclick="this.parentElement.classList.toggle('open')">
+          <span class="method method-get">GET</span>
+          <span class="endpoint-path">/api/auth/telegram/bot-info</span>
+          <span class="endpoint-desc">Get bot info</span>
+        </div>
+        <div class="endpoint-body">
+          <p>Returns the Telegram bot username for the login widget.</p>
+          <h4>Response</h4>
+<pre>{
+  <span class="key">"botUsername"</span>: <span class="str">"Musamuthamibot"</span>
+}</pre>
+          <h4>Status Codes</h4>
+          <div class="status-codes">
+            <span class="status-code status-2xx">200 OK</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="endpoint">
+        <div class="endpoint-header" onclick="this.parentElement.classList.toggle('open')">
+          <span class="method method-post">POST</span>
+          <span class="endpoint-path">/api/auth/telegram/verify</span>
+          <span class="endpoint-desc">Verify Telegram login</span>
+        </div>
+        <div class="endpoint-body">
+          <p>Verifies the HMAC-SHA256 hash from the Telegram Login Widget to authenticate a user.</p>
+          <h4>Request Body</h4>
+          <table class="params-table">
+            <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+            <tr><td>id</td><td><span class="type-tag">string</span><span class="required-tag">required</span></td><td>Telegram user ID</td></tr>
+            <tr><td>first_name</td><td><span class="type-tag">string</span></td><td>User's first name</td></tr>
+            <tr><td>username</td><td><span class="type-tag">string</span></td><td>Telegram username</td></tr>
+            <tr><td>photo_url</td><td><span class="type-tag">string</span></td><td>Profile photo URL</td></tr>
+            <tr><td>auth_date</td><td><span class="type-tag">string</span><span class="required-tag">required</span></td><td>Unix timestamp of auth</td></tr>
+            <tr><td>hash</td><td><span class="type-tag">string</span><span class="required-tag">required</span></td><td>HMAC-SHA256 verification hash</td></tr>
+          </table>
+          <h4>Response</h4>
+<pre>{
+  <span class="key">"verified"</span>: <span class="num">true</span>,
+  <span class="key">"user"</span>: {
+    <span class="key">"id"</span>: <span class="str">"123456789"</span>,
+    <span class="key">"username"</span>: <span class="str">"telegram_user"</span>,
+    <span class="key">"first_name"</span>: <span class="str">"John"</span>
+  }
+}</pre>
+          <h4>Status Codes</h4>
+          <div class="status-codes">
+            <span class="status-code status-2xx">200 OK</span>
+            <span class="status-code status-4xx">401 Unauthorized</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMMUNITY -->
+    <div class="section">
+      <h2>Community</h2>
+
+      <div class="endpoint">
+        <div class="endpoint-header" onclick="this.parentElement.classList.toggle('open')">
+          <span class="method method-post">POST</span>
+          <span class="endpoint-path">/api/community/contact</span>
+          <span class="endpoint-desc">Send a message</span>
+        </div>
+        <div class="endpoint-body">
+          <p>Submit a contact form message to the WARBIRD team.</p>
+          <h4>Request Body</h4>
+          <table class="params-table">
+            <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+            <tr><td>name</td><td><span class="type-tag">string</span><span class="required-tag">required</span></td><td>Your name</td></tr>
+            <tr><td>email</td><td><span class="type-tag">string</span><span class="required-tag">required</span></td><td>Your email address</td></tr>
+            <tr><td>message</td><td><span class="type-tag">string</span><span class="required-tag">required</span></td><td>Message content</td></tr>
+          </table>
+          <h4>Status Codes</h4>
+          <div class="status-codes">
+            <span class="status-code status-2xx">200 OK</span>
+            <span class="status-code status-4xx">400 Bad Request</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="endpoint">
+        <div class="endpoint-header" onclick="this.parentElement.classList.toggle('open')">
+          <span class="method method-post">POST</span>
+          <span class="endpoint-path">/api/community/subscribe</span>
+          <span class="endpoint-desc">Subscribe to newsletter</span>
+        </div>
+        <div class="endpoint-body">
+          <p>Subscribe an email address to the WARBIRD newsletter.</p>
+          <h4>Request Body</h4>
+          <table class="params-table">
+            <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+            <tr><td>email</td><td><span class="type-tag">string</span><span class="required-tag">required</span></td><td>Email to subscribe</td></tr>
+          </table>
+          <h4>Status Codes</h4>
+          <div class="status-codes">
+            <span class="status-code status-2xx">200 OK</span>
+            <span class="status-code status-4xx">400 Bad Request</span>
+            <span class="status-code status-4xx">409 Conflict</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="endpoint">
+        <div class="endpoint-header" onclick="this.parentElement.classList.toggle('open')">
+          <span class="method method-delete">DELETE</span>
+          <span class="endpoint-path">/api/community/unsubscribe</span>
+          <span class="endpoint-desc">Unsubscribe from newsletter</span>
+        </div>
+        <div class="endpoint-body">
+          <p>Remove an email address from the newsletter.</p>
+          <h4>Query Parameters</h4>
+          <table class="params-table">
+            <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+            <tr><td>email</td><td><span class="type-tag">string</span><span class="required-tag">required</span></td><td>Email to unsubscribe</td></tr>
+          </table>
+          <h4>Status Codes</h4>
+          <div class="status-codes">
+            <span class="status-code status-2xx">200 OK</span>
+            <span class="status-code status-4xx">404 Not Found</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="endpoint">
+        <div class="endpoint-header" onclick="this.parentElement.classList.toggle('open')">
+          <span class="method method-get">GET</span>
+          <span class="endpoint-path">/api/community/stats</span>
+          <span class="endpoint-desc">Community statistics</span>
+        </div>
+        <div class="endpoint-body">
+          <p>Returns community statistics including total users and subscribers.</p>
+          <h4>Response</h4>
+<pre>{
+  <span class="key">"totalUsers"</span>: <span class="num">128</span>,
+  <span class="key">"subscribers"</span>: <span class="num">64</span>
+}</pre>
+          <h4>Status Codes</h4>
+          <div class="status-codes">
+            <span class="status-code status-2xx">200 OK</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="note" style="margin-top:40px;">
+      <strong>Need help?</strong> DM us on <a href="https://x.com/Warbirdcoin" target="_blank">X (@Warbirdcoin)</a> or message us on <a href="https://wa.me/254114945842" target="_blank">WhatsApp</a>.
+    </div>
+
+    <div class="footer">
+      &copy; 2026 WARBIRD. All rights reserved.
+    </div>
+  </div>
+
+</body>
+</html>
