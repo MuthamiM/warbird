@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Whitepaper — WARBIRD</title>
+  <meta name="description" content="WARBIRD Whitepaper — Vision, tokenomics, roadmap, and technical architecture of the WARBIRD meme token on Solana." />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#f7931a" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --orange: #f7931a;
+      --orange-dark: #e8850f;
+      --orange-bg: #fff8f0;
+      --bg: #ffffff;
+      --bg-alt: #f9f9f9;
+      --bg-dark: #1d1d1d;
+      --text: #1d1d1d;
+      --text2: #4a4a4a;
+      --text3: #888888;
+      --green: #16c784;
+      --green-bg: #eafaf1;
+      --border: #e8e8e8;
+      --radius: 4px;
+      --radius-md: 8px;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--orange); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    ::selection { background: var(--orange); color: #fff; }
+    .container { max-width: 800px; margin: 0 auto; padding: 0 24px; }
+
+    /* NAV */
+    .navbar {
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      height: 60px;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .nav-logo {
+      width: 28px; height: 28px;
+      background: var(--orange);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .nav-logo svg { width: 14px; height: 14px; fill: #fff; }
+    .nav-back {
+      margin-left: auto;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--orange);
+      text-decoration: none;
+    }
+    .nav-back:hover { text-decoration: underline; }
+
+    /* HERO */
+    .wp-hero {
+      background: var(--bg-alt);
+      border-bottom: 1px solid var(--border);
+      padding: 64px 0 56px;
+      text-align: center;
+    }
+    .wp-hero h1 {
+      font-size: clamp(1.6rem, 4vw, 2.8rem);
+      font-weight: 800;
+      margin-bottom: 16px;
+    }
+    .wp-hero h1 span { color: var(--orange); }
+    .wp-hero p {
+      font-size: 1rem;
+      color: var(--text2);
+      max-width: 540px;
+      margin: 0 auto 24px;
+    }
+    .wp-version {
+      display: inline-block;
+      padding: 6px 16px;
+      background: var(--orange-bg);
+      border: 1px solid rgba(247,147,26,0.2);
+      border-radius: 100px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--orange);
+    }
+
+    /* TOC */
+    .toc {
+      padding: 40px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .toc h2 {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--text3);
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+    .toc-list {
+      list-style: none;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .toc-list li a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: var(--radius-md);
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--text2);
+      transition: all 0.2s;
+    }
+    .toc-list li a:hover { background: var(--orange-bg); color: var(--orange); text-decoration: none; }
+    .toc-num {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--text3);
+      flex-shrink: 0;
+    }
+    @media (max-width: 600px) { .toc-list { grid-template-columns: 1fr; } }
+
+    /* SECTIONS */
+    .wp-section { padding: 48px 0; border-bottom: 1px solid var(--border); }
+    .wp-section:last-child { border-bottom: none; }
+    .wp-section h2 {
+      font-size: 1.4rem;
+      font-weight: 800;
+      margin-bottom: 20px;
+      color: var(--text);
+    }
+    .wp-section h2 span { color: var(--orange); }
+    .wp-section h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin: 28px 0 12px;
+      color: var(--text);
+    }
+    .wp-section p {
+      font-size: 0.92rem;
+      color: var(--text2);
+      line-height: 1.85;
+      margin-bottom: 14px;
+    }
+    .wp-section ul, .wp-section ol {
+      margin: 12px 0 18px 24px;
+    }
+    .wp-section li {
+      font-size: 0.92rem;
+      color: var(--text2);
+      line-height: 1.8;
+      margin-bottom: 6px;
+    }
+
+    /* HIGHLIGHT BOX */
+    .highlight-box {
+      background: var(--orange-bg);
+      border-left: 4px solid var(--orange);
+      padding: 20px 24px;
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      margin: 24px 0;
+    }
+    .highlight-box p { color: var(--text); font-weight: 500; margin-bottom: 0; }
+
+    /* TABLE */
+    .wp-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 0.88rem;
+    }
+    .wp-table th {
+      text-align: left;
+      padding: 12px 16px;
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      font-weight: 700;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text3);
+    }
+    .wp-table td {
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      color: var(--text2);
+    }
+    .wp-table tr:hover td { background: var(--orange-bg); }
+
+    /* CHECK GRID */
+    .check-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 20px 0;
+    }
+    .check-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      font-size: 0.88rem;
+      color: var(--text2);
+      font-weight: 500;
+    }
+    .check-icon {
+      width: 22px; height: 22px;
+      background: var(--green-bg);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .check-icon svg { width: 12px; height: 12px; fill: var(--green); }
+    @media (max-width: 600px) { .check-grid { grid-template-columns: 1fr; } }
+
+    /* FOOTER */
+    .wp-footer {
+      background: var(--bg-dark);
+      color: #888;
+      padding: 32px 0;
+      text-align: center;
+      font-size: 0.82rem;
+      line-height: 1.7;
+    }
+    .wp-footer a { color: var(--orange); }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-brand">
+        <div class="nav-logo"><svg viewBox="0 0 24 24"><path d="M12 2L2 12l3 3 7-7 7 7 3-3L12 2zm0 8l-5 5h3v5h4v-5h3l-5-5z"/></svg></div>
+        warbird
+      </a>
+      <a href="index.html" class="nav-back">&larr; Back to Home</a>
+    </div>
+  </nav>
+
+  <section class="wp-hero">
+    <div class="container">
+      <h1><span>WARBIRD</span> Whitepaper</h1>
+      <p>A comprehensive overview of the WARBIRD token — its vision, tokenomics, technical architecture, and roadmap.</p>
+      <span class="wp-version">Version 1.0 &mdash; 2026</span>
+    </div>
+  </section>
+
+  <div class="container">
+
+    <div class="toc">
+      <h2>Table of Contents</h2>
+      <ul class="toc-list">
+        <li><a href="#abstract"><span class="toc-num">1</span>Abstract</a></li>
+        <li><a href="#vision"><span class="toc-num">2</span>Vision &amp; Mission</a></li>
+        <li><a href="#problem"><span class="toc-num">3</span>The Problem</a></li>
+        <li><a href="#solution"><span class="toc-num">4</span>The Solution</a></li>
+        <li><a href="#tokenomics"><span class="toc-num">5</span>Tokenomics</a></li>
+        <li><a href="#architecture"><span class="toc-num">6</span>Technical Architecture</a></li>
+        <li><a href="#security"><span class="toc-num">7</span>Security</a></li>
+        <li><a href="#roadmap"><span class="toc-num">8</span>Roadmap</a></li>
+        <li><a href="#community"><span class="toc-num">9</span>Community</a></li>
+        <li><a href="#disclaimer"><span class="toc-num">10</span>Disclaimer</a></li>
+      </ul>
+    </div>
+
+    <section class="wp-section" id="abstract">
+      <h2>1. <span>Abstract</span></h2>
+      <p>WARBIRD is a community-driven meme token built on the Solana blockchain. With a fixed supply of 100 million tokens, zero transaction tax, and permanently revoked mint authority, WARBIRD is designed to be the most transparent and fair meme token in the ecosystem.</p>
+      <p>This whitepaper outlines the vision, tokenomics, technical foundations, and future roadmap of the WARBIRD project.</p>
+    </section>
+
+    <section class="wp-section" id="vision">
+      <h2>2. Vision &amp; <span>Mission</span></h2>
+      <p>The meme coin space has been plagued by rug pulls, hidden taxes, and unfair token distributions. WARBIRD was born to change that narrative.</p>
+      <div class="highlight-box">
+        <p><strong>Our Mission:</strong> Build the most transparent, community-owned meme token on Solana — where trust is verifiable and community is everything.</p>
+      </div>
+      <h3>Core Principles</h3>
+      <ul>
+        <li><strong>Transparency:</strong> Every decision, every allocation, every transaction — verifiable on-chain.</li>
+        <li><strong>Fairness:</strong> No VC allocation, no presale, no insider deals. Equal access for all.</li>
+        <li><strong>Community First:</strong> The community drives development, marketing, and governance.</li>
+        <li><strong>Simplicity:</strong> Standard SPL token. No hidden code, no custom transfer logic.</li>
+      </ul>
+    </section>
+
+    <section class="wp-section" id="problem">
+      <h2>3. The <span>Problem</span></h2>
+      <p>The meme coin market faces several critical issues:</p>
+      <ol>
+        <li><strong>Rug Pulls:</strong> Developers mint additional tokens or drain liquidity, devastating holders.</li>
+        <li><strong>Hidden Taxes:</strong> Many tokens embed buy/sell taxes as high as 20-50%, silently draining value.</li>
+        <li><strong>Unfair Distribution:</strong> Insider allocations and VC rounds give early access to the privileged few.</li>
+        <li><strong>Lack of Transparency:</strong> Opaque smart contracts with hidden functions that can freeze, blacklist, or modify transfer logic.</li>
+        <li><strong>Failed Promises:</strong> Big roadmap promises with zero accountability or execution.</li>
+      </ol>
+      <p>These issues have eroded trust in the meme coin ecosystem. WARBIRD exists to prove it can be done differently.</p>
+    </section>
+
+    <section class="wp-section" id="solution">
+      <h2>4. The <span>Solution</span></h2>
+      <p>WARBIRD addresses every problem with verifiable, on-chain guarantees:</p>
+      <div class="check-grid">
+        <div class="check-item">
+          <span class="check-icon"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></span>
+          Mint authority permanently revoked
+        </div>
+        <div class="check-item">
+          <span class="check-icon"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></span>
+          Zero buy and sell tax
+        </div>
+        <div class="check-item">
+          <span class="check-icon"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></span>
+          Standard SPL token — no custom logic
+        </div>
+        <div class="check-item">
+          <span class="check-icon"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></span>
+          100% on-chain verifiable
+        </div>
+        <div class="check-item">
+          <span class="check-icon"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></span>
+          No freeze or blacklist authority
+        </div>
+        <div class="check-item">
+          <span class="check-icon"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></span>
+          Fair launch — no presale, no VC
+        </div>
+      </div>
+    </section>
+
+    <section class="wp-section" id="tokenomics">
+      <h2>5. <span>Tokenomics</span></h2>
+      <p>WARBIRD's tokenomics are designed for long-term sustainability and maximum community benefit.</p>
+
+      <table class="wp-table">
+        <tr><th>Property</th><th>Value</th></tr>
+        <tr><td>Token Name</td><td>WarBird</td></tr>
+        <tr><td>Symbol</td><td>WARBIRD</td></tr>
+        <tr><td>Blockchain</td><td>Solana (SPL Token)</td></tr>
+        <tr><td>Total Supply</td><td>100,000,000</td></tr>
+        <tr><td>Decimals</td><td>9</td></tr>
+        <tr><td>Buy/Sell Tax</td><td>0%</td></tr>
+        <tr><td>Mint Authority</td><td>Permanently Revoked</td></tr>
+        <tr><td>Freeze Authority</td><td>None</td></tr>
+      </table>
+
+      <h3>Distribution</h3>
+      <table class="wp-table">
+        <tr><th>Allocation</th><th>Percentage</th><th>Purpose</th></tr>
+        <tr><td>Liquidity Pool</td><td>90%</td><td>Locked LP for deep trading liquidity. LP tokens burned for permanent trust.</td></tr>
+        <tr><td>Marketing</td><td>5%</td><td>Community campaigns, KOL partnerships, social media growth.</td></tr>
+        <tr><td>Team / Dev</td><td>5%</td><td>Development, infrastructure, CEX listing fees, and ongoing maintenance.</td></tr>
+      </table>
+
+      <div class="highlight-box">
+        <p><strong>Key Guarantee:</strong> With mint authority permanently revoked on-chain, no additional tokens can ever be created. The total supply of 100,000,000 WARBIRD is immutable.</p>
+      </div>
+    </section>
+
+    <section class="wp-section" id="architecture">
+      <h2>6. Technical <span>Architecture</span></h2>
+      <p>WARBIRD leverages the Solana blockchain for its speed, low cost, and security:</p>
+
+      <h3>Why Solana?</h3>
+      <ul>
+        <li><strong>Speed:</strong> 400ms block time with sub-second finality</li>
+        <li><strong>Cost:</strong> Average transaction fee under $0.001</li>
+        <li><strong>Throughput:</strong> 65,000+ transactions per second</li>
+        <li><strong>Ecosystem:</strong> Jupiter, Raydium, Phantom — mature DeFi infrastructure</li>
+        <li><strong>Security:</strong> Proof of History + Proof of Stake consensus</li>
+      </ul>
+
+      <h3>Token Standard</h3>
+      <p>WARBIRD is a standard SPL (Solana Program Library) token. It uses the native Token Program, not a custom smart contract. This means:</p>
+      <ul>
+        <li>No hidden functions in the token contract</li>
+        <li>No ability to pause, freeze, or blacklist transfers</li>
+        <li>Compatible with every Solana wallet and DEX out of the box</li>
+        <li>Auditable by anyone using Solana Explorer</li>
+      </ul>
+
+      <h3>Metadata</h3>
+      <p>Token metadata is stored on-chain using the Metaplex Token Metadata standard, ensuring permanent association of the token name, symbol, and image with the mint address.</p>
+    </section>
+
+    <section class="wp-section" id="security">
+      <h2>7. <span>Security</span></h2>
+      <p>Trust is not given — it's verified. Every security claim WARBIRD makes is verifiable on-chain:</p>
+
+      <table class="wp-table">
+        <tr><th>Claim</th><th>Verification</th></tr>
+        <tr><td>Mint Authority Revoked</td><td>Check mint account on Solana Explorer — mintAuthority: null</td></tr>
+        <tr><td>Zero Tax</td><td>Standard SPL Token Program — no custom transfer hooks</td></tr>
+        <tr><td>No Freeze</td><td>Freeze authority not set on mint account</td></tr>
+        <tr><td>Fixed Supply</td><td>100,000,000 tokens, verifiable on-chain</td></tr>
+        <tr><td>LP Locked</td><td>LP tokens sent to burn address (post-listing)</td></tr>
+      </table>
+
+      <div class="highlight-box">
+        <p><strong>Verify yourself:</strong> Always check the mint account on <a href="https://explorer.solana.com" target="_blank">Solana Explorer</a> before investing. Don't trust — verify.</p>
+      </div>
+    </section>
+
+    <section class="wp-section" id="roadmap">
+      <h2>8. <span>Roadmap</span></h2>
+
+      <h3>Phase 1 — Foundation (Q1 2026)</h3>
+      <ul>
+        <li>Token creation and deployment on Solana</li>
+        <li>Website launch with full transparency</li>
+        <li>Community channels (Telegram, Twitter/X)</li>
+        <li>Whitepaper publication</li>
+        <li>Initial community building</li>
+      </ul>
+
+      <h3>Phase 2 — Launch (Q2 2026)</h3>
+      <ul>
+        <li>DEX listing on Jupiter and Raydium</li>
+        <li>Liquidity pool creation and LP lock/burn</li>
+        <li>CoinGecko and CoinMarketCap listing</li>
+        <li>First marketing push — KOLs, meme campaigns</li>
+        <li>1,000 holders milestone</li>
+      </ul>
+
+      <h3>Phase 3 — Growth (Q3 2026)</h3>
+      <ul>
+        <li>Partnerships with other Solana projects</li>
+        <li>CEX listing applications (MEXC, Gate.io)</li>
+        <li>NFT collection for WARBIRD holders</li>
+        <li>Community governance proposals</li>
+        <li>10,000 holders milestone</li>
+      </ul>
+
+      <h3>Phase 4 — Expansion (Q4 2026+)</h3>
+      <ul>
+        <li>Major CEX listings (Bybit, KuCoin)</li>
+        <li>WARBIRD merchandise store</li>
+        <li>Cross-chain bridge exploration</li>
+        <li>Community DAO formation</li>
+        <li>Global marketing campaigns</li>
+      </ul>
+    </section>
+
+    <section class="wp-section" id="community">
+      <h2>9. <span>Community</span></h2>
+      <p>WARBIRD is nothing without its community. Every decision is made with community input, and growth is driven by community action.</p>
+      <h3>Join Us</h3>
+      <ul>
+        <li><strong>Telegram:</strong> <a href="https://t.me/warbirdmemecoin" target="_blank">t.me/warbirdmemecoin</a></li>
+        <li><strong>Twitter/X:</strong> Follow for updates, memes, and alpha</li>
+        <li><strong>Discord:</strong> Coming soon — for governance and community discussion</li>
+      </ul>
+      <p>The WARBIRD community is open, inclusive, and builder-focused. Whether you're a holder, developer, or meme creator — you belong here.</p>
+    </section>
+
+    <section class="wp-section" id="disclaimer">
+      <h2>10. <span>Disclaimer</span></h2>
+      <p>WARBIRD is a meme token with no intrinsic value or expectation of financial return. This whitepaper is for informational purposes only and does not constitute financial advice, an investment recommendation, or a solicitation to buy or sell any digital asset.</p>
+      <p>Cryptocurrency investments carry significant risk, including the possible loss of all invested capital. Always do your own research (DYOR) and consult with a financial advisor before making any investment decisions.</p>
+      <p>The WARBIRD team makes no guarantees about future price, listings, or partnerships. The roadmap represents intentions, not commitments. Timelines may change based on market conditions and community input.</p>
+    </section>
+
+  </div>
+
+  <footer class="wp-footer">
+    <div class="container">
+      <p>&copy; 2026 WARBIRD. All rights reserved. | <a href="index.html">Home</a> | <a href="privacy.html">Privacy Policy</a> | <a href="https://t.me/warbirdmemecoin" target="_blank">Telegram</a></p>
+    </div>
+  </footer>
+
+</body>
+</html>

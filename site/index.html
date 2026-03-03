@@ -5,6 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>WARBIRD — Innovative Meme Token on Solana</title>
   <meta name="description" content="WARBIRD is an innovative meme token on the Solana network. Zero tax. Fixed supply. Community driven." />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#f7931a" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="WARBIRD — Innovative Meme Token on Solana" />
+  <meta property="og:description" content="Community-driven meme token on Solana. Zero tax. Fixed supply of 100M. Mint authority permanently revoked." />
+  <meta property="og:url" content="https://muthamim.github.io/warbird/" />
+  <meta property="og:site_name" content="WARBIRD" />
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="WARBIRD — Meme Token on Solana" />
+  <meta name="twitter:description" content="Zero tax. Fixed supply. Mint authority revoked. Community driven." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -1032,13 +1047,60 @@
 
     /* ═══ MOBILE AUTH WRAPPER ═══ */
     .mob-auth-wrapper { display: none; }
+
+    /* ═══ ROADMAP ═══ */
+    .roadmap-track { position: relative; max-width: 700px; margin: 0 auto; }
+    .roadmap-track::before {
+      content: ''; position: absolute; left: 20px; top: 0; bottom: 0;
+      width: 3px; background: var(--border); border-radius: 3px;
+    }
+    .rm-phase {
+      position: relative; padding: 0 0 48px 60px;
+    }
+    .rm-phase:last-child { padding-bottom: 0; }
+    .rm-dot {
+      position: absolute; left: 10px; top: 4px;
+      width: 24px; height: 24px; border-radius: 50%;
+      background: var(--orange); border: 4px solid #fff;
+      box-shadow: 0 0 0 2px var(--orange);
+      z-index: 1;
+    }
+    .rm-phase.completed .rm-dot { background: var(--green); box-shadow: 0 0 0 2px var(--green); }
+    .rm-phase.active .rm-dot { animation: rmPulse 2s infinite; }
+    @keyframes rmPulse {
+      0%, 100% { box-shadow: 0 0 0 2px var(--orange); }
+      50% { box-shadow: 0 0 0 6px rgba(247,147,26,0.2); }
+    }
+    .rm-label {
+      display: inline-block; font-size: 0.72rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 1.5px;
+      color: var(--orange); margin-bottom: 8px;
+    }
+    .rm-phase.completed .rm-label { color: var(--green); }
+    .rm-title {
+      font-size: 1.15rem; font-weight: 700; margin-bottom: 12px; color: var(--text);
+    }
+    .rm-items { list-style: none; }
+    .rm-items li {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 8px 0; font-size: 0.88rem; color: var(--text2);
+    }
+    .rm-items li::before {
+      content: ''; flex-shrink: 0; width: 6px; height: 6px;
+      border-radius: 50%; background: var(--text4); margin-top: 8px;
+    }
+    .rm-phase.completed .rm-items li::before { background: var(--green); }
+    @media (max-width: 480px) {
+      .rm-phase { padding-left: 48px; padding-bottom: 36px; }
+      .rm-title { font-size: 1.02rem; }
+    }
   </style>
 </head>
 <body>
 
   <!-- TOP BANNER -->
   <div class="top-banner" id="topBanner">
-    Join the WARBIRD community today!<a href="https://t.me" target="_blank">Join Telegram</a>
+    Join the WARBIRD community today!<a href="https://t.me/warbirdmemecoin" target="_blank">Join Telegram</a>
   </div>
 
   <!-- NAVBAR -->
@@ -1056,6 +1118,8 @@
             <a href="#about">About WARBIRD</a>
             <a href="#tokenomics">Tokenomics</a>
             <a href="#buy">How to Buy</a>
+            <a href="#roadmap">Roadmap</a>
+            <a href="whitepaper.html">Whitepaper</a>
           </div>
         </div>
         <div class="nav-item" onclick="this.classList.toggle('mob-open')">
@@ -1073,11 +1137,12 @@
           Community
           <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>
           <div class="dropdown">
-            <a href="https://twitter.com" target="_blank">Twitter / X</a>
-            <a href="https://t.me" target="_blank">Telegram</a>
+            <a href="https://x.com" target="_blank">Twitter / X</a>
+            <a href="https://t.me/warbirdmemecoin" target="_blank">Telegram</a>
             <a href="https://discord.com" target="_blank">Discord</a>
           </div>
         </div>
+        <a class="nav-item" href="#roadmap">Roadmap</a>
         <a class="nav-item" href="#faq">FAQ</a>
         <!-- MOBILE AUTH (visible only in mobile slide-out) -->
         <div class="mob-auth-wrapper" style="display:none;">
@@ -1391,6 +1456,66 @@
     </div>
   </section>
 
+  <!-- ROADMAP -->
+  <section class="section" id="roadmap">
+    <div class="container">
+      <div class="sec-header reveal">
+        <h2>Project <span class="orange">Roadmap</span></h2>
+        <p>Our journey from launch to the moon. Building in public, delivering on promises.</p>
+      </div>
+      <div class="roadmap-track reveal">
+        <div class="rm-phase completed">
+          <div class="rm-dot"></div>
+          <div class="rm-label">Phase 1 — Foundation</div>
+          <div class="rm-title">Token Creation &amp; Website Launch</div>
+          <ul class="rm-items">
+            <li>Token creation and deployment on Solana</li>
+            <li>Website launch with full transparency</li>
+            <li>Community channels — Telegram, Twitter/X</li>
+            <li>Whitepaper publication</li>
+            <li>Initial community building</li>
+          </ul>
+        </div>
+        <div class="rm-phase active">
+          <div class="rm-dot"></div>
+          <div class="rm-label">Phase 2 — Launch</div>
+          <div class="rm-title">DEX Listing &amp; First Marketing Push</div>
+          <ul class="rm-items">
+            <li>DEX listing on Jupiter &amp; Raydium</li>
+            <li>Liquidity pool creation &amp; LP lock/burn</li>
+            <li>CoinGecko &amp; CoinMarketCap listing</li>
+            <li>First marketing campaign — KOLs &amp; memes</li>
+            <li>1,000 holders milestone</li>
+          </ul>
+        </div>
+        <div class="rm-phase">
+          <div class="rm-dot"></div>
+          <div class="rm-label">Phase 3 — Growth</div>
+          <div class="rm-title">Partnerships &amp; CEX Listings</div>
+          <ul class="rm-items">
+            <li>Partnerships with other Solana projects</li>
+            <li>CEX listing applications (MEXC, Gate.io)</li>
+            <li>NFT collection for WARBIRD holders</li>
+            <li>Community governance proposals</li>
+            <li>10,000 holders milestone</li>
+          </ul>
+        </div>
+        <div class="rm-phase">
+          <div class="rm-dot"></div>
+          <div class="rm-label">Phase 4 — Expansion</div>
+          <div class="rm-title">Global Reach &amp; DAO</div>
+          <ul class="rm-items">
+            <li>Major CEX listings (Bybit, KuCoin)</li>
+            <li>WARBIRD merchandise store</li>
+            <li>Cross-chain bridge exploration</li>
+            <li>Community DAO formation</li>
+            <li>Global marketing campaigns</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- FOOTER -->
   <footer class="footer">
     <div class="container">
@@ -1406,6 +1531,7 @@
             <a href="#tokenomics">Tokenomics</a>
             <a href="#buy">How to Buy</a>
             <a href="#trade">Trade</a>
+            <a href="#roadmap">Roadmap</a>
             <a href="#faq">FAQ</a>
           </div>
         </div>
@@ -1421,9 +1547,10 @@
         <div>
           <h4>Community</h4>
           <div class="footer-links">
-            <a href="https://twitter.com" target="_blank">Twitter / X</a>
-            <a href="https://t.me" target="_blank">Telegram</a>
+            <a href="https://x.com" target="_blank">Twitter / X</a>
+            <a href="https://t.me/warbirdmemecoin" target="_blank">Telegram</a>
             <a href="https://discord.com" target="_blank">Discord</a>
+            <a href="whitepaper.html">Whitepaper</a>
             <a href="privacy.html">Privacy Policy</a>
             <a href="#" onclick="openCookieSettings(); return false;">Cookie Settings</a>
           </div>
@@ -1892,6 +2019,11 @@
         cp.replaceWith(f);
       }
     }).catch(() => {});
+
+    /* ═══ SERVICE WORKER ═══ */
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').catch(() => {});
+    }
 
     /* ═══ JUPITER TERMINAL ═══ */
     (function(){
